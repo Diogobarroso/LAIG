@@ -27,6 +27,15 @@
     <ClCompile Include="src\XMLScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bin\ANFScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\globalElement.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DemoScene.h">
@@ -45,6 +54,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ANFScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\globalElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -66,12 +66,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bin\ANFScene.cpp" />
+    <ClCompile Include="bin\color.cpp" />
+    <ClCompile Include="bin\globalElement.cpp" />
     <ClCompile Include="src\DemoScene.cpp" />
     <ClCompile Include="src\ExampleObject.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\XMLScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bin\color.h" />
+    <ClInclude Include="bin\globalElement.h" />
+    <ClInclude Include="include\ANFScene.h" />
     <ClInclude Include="include\myCylinder.h" />
     <ClInclude Include="include\myUnitCube.h" />
     <ClInclude Include="include\Plane.h" />

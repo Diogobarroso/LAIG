@@ -1,8 +1,3 @@
-/* 
- * G0_Base: projeto inicial de CGra
- * 
- */
-
 #include <iostream>
 #include <exception>
 
@@ -21,6 +16,7 @@ int main(int argc, char* argv[]) {
 	try {
 		app.init(&argc, argv);
 
+		/* Parsing */
 		XMLScene scene = XMLScene (argv[1]);
 
 		app.setScene(new DemoScene());
