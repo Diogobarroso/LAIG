@@ -18,6 +18,7 @@
     <ClCompile Include="..\src\globalElement.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\XMLScene.cpp" />
+    <ClCompile Include="cameraElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ANFScene.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="..\src\tinystr.h" />
     <ClInclude Include="..\src\tinyxml.h" />
     <ClInclude Include="..\src\XMLScene.h" />
+    <ClInclude Include="cameraElement.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{89A18068-B93D-4EFD-88DB-4F6DD7DA6636}</ProjectGuid>

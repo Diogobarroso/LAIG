@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GL/gl.h>
+
 class Color
 {
 private:
@@ -7,5 +9,12 @@ private:
 public:
 	Color();
 	Color(float, float, float, float);
+
+	float getRed() {return red;}
+	float getGreen() {return green;}
+	float getBlue() {return blue;}
+	float getAlpha() {return alpha;}
+
+	GLfloat * getArray();
 };
 

@@ -16,3 +16,9 @@ Color::Color(float r, float g, float b, float a)
 	blue = b;
 	alpha = a;
 }
+
+GLfloat* Color::getArray () {
+	GLfloat ret [] = {red, blue, green, alpha};
+
+	return ret;
+}

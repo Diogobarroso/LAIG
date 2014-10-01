@@ -43,6 +43,9 @@ ANFScene::ANFScene(char *filename)
 	else
 	{
 		printf ("Processing Globals\n");
+		
+		printf ("Processing Drawing\n");
+
 		TiXmlElement * drawingElement = global.getElement()->FirstChildElement("drawing");
 
 		if (drawingElement)
@@ -64,9 +67,61 @@ ANFScene::ANFScene(char *filename)
 				if (!global.setDrawBackground(r, g, b, a))
 					failed = true;
 			}
-			
-
+		} else {
+			printf ("Drawing Element not found\n");
+			failed = true;
 		}
+
+		printf ("Processing Culling\n");
+
+		TiXmlElement * cullingElement = global.getElement()->FirstChildElement("culling");
+
+		if (cullingElement)
+		{
+			content = std::string ( cullingElement->Attribute("face"));
+			if (!global.setCullFace(content))
+				failed = true;
+
+			content = std::string ( cullingElement->Attribute("order"));
+			if (!global.setCullOrder(content))
+				failed = true;
+		} else {
+			printf ("Culling Element not found\n");
+			failed = true;
+		}
+
+		printf ("Processing Lighting\n");
+
+		TiXmlElement * lightingElement = global.getElement()->FirstChildElement("lighting");
+
+		if (lightingElement)
+		{
+			content = std::string ( lightingElement->Attribute("doublesided"));
+			if (!global.setLightDS(content))
+				failed = true;
+
+			content = std::string ( lightingElement->Attribute("local"));
+			if (!global.setLightLocal(content))
+				failed = true;
+
+			content = std::string ( lightingElement->Attribute("enabled"));
+			if (!global.setLightEnabled(content))
+				failed = true;
+
+			content = std::string ( drawingElement->Attribute("ambient"));
+
+			const char * content_c = content.c_str();
+
+			if(content_c && sscanf(content_c,"%f %f %f %f",&r, &g, &b, &a) == 4)
+			{
+				if (!global.setLightAmbientColor(r, g, b, a))
+					failed = true;
+			}
+		} else {
+			printf ("Lighting Element not found\n");
+			failed = true;
+		}
+
 	}
 
 	/*
@@ -204,7 +259,7 @@ ANFScene::~ANFScene()
 
 //-------------------------------------------------------
 
-TiXmlElement *ANFScene::findChildByAttribute(TiXmlElement *parent,const char * attr, const char *val)
+TiXmlElement * ANFScene::findChildByAttribute(TiXmlElement *parent,const char * attr, const char *val)
 // Searches within descendants of a parent for a node that has an attribute _attr_ (e.g. an id) with the value _val_
 // A more elaborate version of this would rely on XPath expressions
 {
@@ -220,4 +275,22 @@ TiXmlElement *ANFScene::findChildByAttribute(TiXmlElement *parent,const char * a
 	return child;
 }
 
+void ANFScene::init()
+{
+	if (global.getLightEnabled) {
+		glEnable (GL_LIGHTING);
+	} else {
+		glDisable (GL_LIGHTING);
+	}
 
+	if (global.getLightDS) {
+		glLightModelf (GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+	} else {
+		glLightModelf (GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+	}
+
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global.getLightAmbientColor().getArray());
+
+	
+
+}

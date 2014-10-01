@@ -3,7 +3,7 @@
 	<globals>
         <!-- Valores para mode: "fill" , "line", "point" -->
 		<!-- Valores para shading: "flat", "gouraud" ) -->
-		<drawing mode="fill" shading="gouraud" background=".5 .0 1 1.2" />
+		<drawing mode="fill" shading="gouraud" background=".1 .6 .1 1.0" />
 		
 		<!-- Valores para cullface: "none", "back" , "front" ou "both" -->
 		<!-- Valores para cullorder : "ccw" ou "cw" -->
