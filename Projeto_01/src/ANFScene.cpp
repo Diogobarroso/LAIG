@@ -2,6 +2,9 @@
 
 #include "ANFScene.h"
 
+// Positions for two lights
+float light0_pos[4] = {1, 2, 1, 1};
+
 ANFScene::ANFScene(char *filename)
 {
 
@@ -29,21 +32,29 @@ ANFScene::ANFScene(char *filename)
 	/* Block of Variables for processing */
 
 	std::string content;
-	float r, g, b, a;
+	float r, g, b, a, f, x, y, z;
 	bool failed = false;
-	
+	std::vector<std::string>::iterator it;
+
+	usedIDs = std::vector<std::string> ();
+
 	/* -------------------------------- */
 
 	/* Block of ANF Elements */
 	global = globalElement();
 	global.setElement (anfElement -> FirstChildElement ( "globals" ));
 
+	cameras = cameraElement();
+	cameras.setElement (anfElement -> FirstChildElement ( "cameras" ));
+
+	/* --------------------- */
+
 	if (global.getElement() == NULL)
 		printf ("Globals Element not found\n");
 	else
 	{
 		printf ("Processing Globals\n");
-		
+
 		printf ("Processing Drawing\n");
 
 		TiXmlElement * drawingElement = global.getElement()->FirstChildElement("drawing");
@@ -96,6 +107,7 @@ ANFScene::ANFScene(char *filename)
 
 		if (lightingElement)
 		{
+
 			content = std::string ( lightingElement->Attribute("doublesided"));
 			if (!global.setLightDS(content))
 				failed = true;
@@ -108,7 +120,7 @@ ANFScene::ANFScene(char *filename)
 			if (!global.setLightEnabled(content))
 				failed = true;
 
-			content = std::string ( drawingElement->Attribute("ambient"));
+			content = std::string ( lightingElement->Attribute("ambient"));
 
 			const char * content_c = content.c_str();
 
@@ -124,144 +136,214 @@ ANFScene::ANFScene(char *filename)
 
 	}
 
-	/*
-	initElement = anfElement->FirstChildElement( "Init" );
-	matsElement = anfElement->FirstChildElement( "Materials" );
-	textsElement =  anfElement->FirstChildElement( "Textures" );
-	leavesElement =  anfElement->FirstChildElement( "Leaves" );
-	nodesElement =  anfElement->FirstChildElement( "Nodes" );
-
-	graphElement =  anfElement->FirstChildElement( "Graph" );
-
-
-	// Init
-	// An example of well-known, required nodes
-
-	if (initElement == NULL)
-		printf("Init block not found!\n");
+	if (cameras.getElement() == NULL)
+		printf ("Cameras Element not found\n");
 	else
 	{
-		printf("Processing init:\n");
-		// frustum: example of a node with individual attributes
-		TiXmlElement* frustumElement=initElement->FirstChildElement("frustum");
-		if (frustumElement)
+		content = std::string (cameras.getElement()->Attribute ("initial"));
+		cameras.setInitial(content);
+
+		int cameraCount = 0;
+		for(TiXmlElement* camera = cameras.getElement()->FirstChildElement(); camera != NULL; camera = camera->NextSiblingElement())
 		{
-			float near,far;
+			cameraCount ++;
 
-			if (frustumElement->QueryFloatAttribute("near",&near)==TIXML_SUCCESS && 
-				frustumElement->QueryFloatAttribute("far",&far)==TIXML_SUCCESS
-				)
-				printf("  frustum attributes: %f %f\n", near, far);
-			else
-				printf("Error parsing frustum\n");
-		}
-		else
-			printf("frustum not found\n");
+			content = camera->Value();
 
-
-		// translate: example of a node with an attribute comprising several float values
-		// It shows an example of extracting an attribute's value, and then further parsing that value 
-		// to extract individual values
-		TiXmlElement* translateElement=initElement->FirstChildElement("translate");
-		if (translateElement)
-		{
-			char *valString=NULL;
-			float x,y,z;
-
-			valString=(char *) translateElement->Attribute("xyz");
-
-			if(valString && sscanf(valString,"%f %f %f",&x, &y, &z)==3)
+			if (content == "perspective")
 			{
-				printf("  translate values (XYZ): %f %f %f\n", x, y, z);
-			}
-			else
-				printf("Error parsing translate");
-		}
-		else
-			printf("translate not found\n");		
+				PerspectiveCamera* cam = new PerspectiveCamera();
 
-		// repeat for each of the variables as needed
+				content = std::string ( camera->Attribute("id"));
+
+				it = find (usedIDs.begin(), usedIDs.end(),  content);
+
+				if (it == usedIDs.end())
+				{
+					cam->setID(content);
+				} else {
+					std::cout << "ID " << content << " is already in use\n";
+					failed = true;
+				}
+
+				if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
+					if (!cam->setNear(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("far",&f)==TIXML_SUCCESS)
+					if (!cam->setFar(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("angle",&f)==TIXML_SUCCESS)
+					if (!cam->setAngle(f))
+						failed = true;
+
+				content = std::string ( camera->Attribute("pos"));
+
+				const char * content_c = content.c_str();
+
+				if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
+				{
+					if (!cam->setPos(x,y,z))
+						failed = true;
+				}
+
+				cameras.addCamera(cam);
+			} else if (content == "ortho")
+			{
+				OrthoCamera * cam = new OrthoCamera ();
+
+				content = std::string ( camera->Attribute("id"));
+
+				it = find (usedIDs.begin(), usedIDs.end(),  content);
+
+				if (it == usedIDs.end())
+				{
+					cam->setID(content);
+				} else {
+					std::cout << "ID " << content << " is already in use\n";
+					failed = true;
+				}
+
+				if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
+					if (!cam->setNear(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("far",&f)==TIXML_SUCCESS)
+					if (!cam->setFar(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("left",&f)==TIXML_SUCCESS)
+					if (!cam->setLeft(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("right",&f)==TIXML_SUCCESS)
+					if (!cam->setRight(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("top",&f)==TIXML_SUCCESS)
+					if (!cam->setTop(f))
+						failed = true;
+
+				if (camera->QueryFloatAttribute("bottom",&f)==TIXML_SUCCESS)
+					if (!cam->setBottom(f))
+						failed = true;
+
+				content = std::string ( camera->Attribute("direction"));
+				if (!cam->setAxis(content.at(0)))
+					failed = true;
+
+				cameras.addCamera(cam);
+			}
+		}
+
+
+		std::cout << "Found " << cameraCount << " camera(s)\n";
+
+		cameras.setActiveID(cameras.getInitial());
+
+		activeCamera = cameras.getActiveCamera();
+	}
+	/*
+	content = std::string (cameras.getElement()->Attribute ("initial"));
+	cameras.setInitial (content);
+
+
+
+	TiXmlElement * camera = cameras.getElement()->FirstChildElement("perspective");
+
+	while (camera)
+	{
+	cameraCount ++;
+
+	PerspectiveCamera* cam = new PerspectiveCamera();
+
+	content = std::string ( camera->Attribute("id"));
+
+	it = find (usedIDs.begin(), usedIDs.end(),  content);
+
+	if (it == usedIDs.end())
+	{
+	cam->setID(content);
+	} else {
+	std::cout << "ID " << content << " is already in use\n";
+	failed = true;
 	}
 
-	// Other blocks could be validated/processed here
 
 
-	// graph section
-	if (graphElement == NULL)
-		printf("Graph block not found!\n");
-	else
+	if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
+	if (!cam->setNear(f))
+	failed = true;
+
+	if (camera->QueryFloatAttribute("far",&f)==TIXML_SUCCESS)
+	if (!cam->setFar(f))
+	failed = true;
+
+	if (camera->QueryFloatAttribute("angle",&f)==TIXML_SUCCESS)
+	if (!cam->setAngle(f))
+	failed = true;
+
+	content = std::string ( camera->Attribute("pos"));
+
+	const char * content_c = content.c_str();
+
+	if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
 	{
-		char *prefix="  -";
-		TiXmlElement *node=graphElement->FirstChildElement();
+	if (!cam->setPos(x,y,z))
+	failed = true;
+	}
 
-		while (node)
-		{
-			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
-			TiXmlElement *child=node->FirstChildElement();
-			while (child)
-			{
-				if (strcmp(child->Value(),"Node")==0)
-				{
-					// access node data by searching for its id in the nodes section
-					
-					TiXmlElement *noderef=findChildByAttribute(nodesElement,"id",child->Attribute("id"));
+	cameras.addCamera(cam);
 
-					if (noderef)
-					{
-						// print id
-						printf("  - Node id: '%s'\n", child->Attribute("id"));
+	camera = camera->NextSiblingElement();
+	}
 
-						// prints some of the data
-						printf("    - Material id: '%s' \n", noderef->FirstChildElement("material")->Attribute("id"));
-						printf("    - Texture id: '%s' \n", noderef->FirstChildElement("texture")->Attribute("id"));
+	std::cout << "Found " << cameraCount << " perspective camera(s)\n";
+	cameras.setActiveID(cameras.getInitial());
 
-						// repeat for other leaf details
-					}
-					else
-						printf("  - Node id: '%s': NOT FOUND IN THE NODES SECTION\n", child->Attribute("id"));
-
-				}
-				if (strcmp(child->Value(),"Leaf")==0)
-				{
-					// access leaf data by searching for its id in the leaves section
-					TiXmlElement *leaf=findChildByAttribute(leavesElement,"id",child->Attribute("id"));
-
-					if (leaf)
-					{
-						// it is a leaf and it is present in the leaves section
-						printf("  - Leaf id: '%s' ; type: '%s'\n", child->Attribute("id"), leaf->Attribute("type"));
-
-						// repeat for other leaf details
-					}
-					else
-						printf("  - Leaf id: '%s' - NOT FOUND IN THE LEAVES SECTION\n",child->Attribute("id"));
-				}
-
-				child=child->NextSiblingElement();
-			}
-			node=node->NextSiblingElement();
-		}
 	}
 	*/
+	
+	initCameras();
 
-		if (failed)
-		{
-			std::cout << "\nPlease check your ANF file for the errors listed above\n";
-			system("pause");
-			exit(1);
-		}
+	if (failed)
+	{
+		std::cout << "\nPlease check your ANF file for the errors listed above\n";
+		system("pause");
+		exit(1);
+	}
 }
 
-ANFScene::~ANFScene()
+void ANFScene::initCameras()
 {
-	delete(doc);
+	std::vector<Camera*> camVec = cameras.getCameras();
+	for (unsigned int i = 0; i < camVec.size(); i++)
+	{
+		scene_cameras.push_back(camVec[i]);
+	}
+
+}
+
+
+void ANFScene::setCamera(Camera cam)
+{
+	std::vector<Camera*> camVec = cameras.getCameras();
+	for (unsigned int i = 0; i < camVec.size(); i++)
+	{
+		if (cam.getID() == cameras.getActiveID())
+		{
+			activateCamera(i);
+			break;
+		}
+	}
 }
 
 //-------------------------------------------------------
 
 TiXmlElement * ANFScene::findChildByAttribute(TiXmlElement *parent,const char * attr, const char *val)
-// Searches within descendants of a parent for a node that has an attribute _attr_ (e.g. an id) with the value _val_
-// A more elaborate version of this would rely on XPath expressions
+	// Searches within descendants of a parent for a node that has an attribute _attr_ (e.g. an id) with the value _val_
+	// A more elaborate version of this would rely on XPath expressions
 {
 	TiXmlElement *child=parent->FirstChildElement();
 	int found=0;
@@ -277,13 +359,13 @@ TiXmlElement * ANFScene::findChildByAttribute(TiXmlElement *parent,const char * 
 
 void ANFScene::init()
 {
-	if (global.getLightEnabled) {
+	if (global.getLightEnabled()) {
 		glEnable (GL_LIGHTING);
 	} else {
 		glDisable (GL_LIGHTING);
 	}
 
-	if (global.getLightDS) {
+	if (global.getLightDS()) {
 		glLightModelf (GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	} else {
 		glLightModelf (GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
@@ -291,6 +373,65 @@ void ANFScene::init()
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global.getLightAmbientColor().getArray());
 
-	
+	glCullFace(global.getCullFace());
+	glFrontFace(global.getCullOrder());
 
+
+	/* INIT CAMERA */
+	activeCamera = cameras.getActiveCamera();
+	activeCamera->updateProjectionMatrix(1,1);
+
+
+	/* ------------- */
+	light0 = new CGFlight(GL_LIGHT0, light0_pos);
+	light0->setKc(0.0); light0->setKl(0.2); light0->setKq(0.0);
+	light0->disable();
+	light0->enable();
+
+	cube = new myUnitCube();
+}
+
+void ANFScene::display()
+{
+	// ---- BEGIN Background, camera and axis setup
+
+	// Clear image and depth buffer everytime we update the scene
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+	// Initialize Model-View matrix as identity (no transformation
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	// Apply transformations corresponding to the camera position relative to the origin
+	//CGFscene::activeCamera->applyView();
+
+	activeCamera = cameras.getActiveCamera();
+
+	activeCamera->applyView();
+
+	// Draw axis
+	axis.draw();
+
+	// ---- END Background, camera and axis setup
+
+	// ---- BEGIN Primitive drawing section
+	light0->draw();
+	cube->draw();
+
+	// ---- END Primitive drawing section
+
+	// We have been drawing in a memory area that is not visible - the back buffer, 
+	// while the graphics card is showing the contents of another buffer - the front buffer
+	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
+	glutSwapBuffers();
+}
+
+void ANFScene::update(unsigned long t)
+{
+
+}
+
+ANFScene::~ANFScene()
+{
+	delete(doc);
 }

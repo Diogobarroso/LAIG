@@ -9,12 +9,14 @@
 		<!-- Valores para cullorder : "ccw" ou "cw" -->
 		<culling face="back" order="ccw" />
 
-		<lighting doublesided="true" local="true" enabled="true" ambient="0.5 0.5 0.5 1.0" />
+		<lighting doublesided="true" local="true" enabled="true" ambient="0 0.5 0 1.0" />
 			
 	</globals>
 		
-	<cameras initial="cameraSet" >
-		<perspective id="PerspectiveCamera" near="1.0" far="999.0" angle="45" pos="20.0 20.0 20.0" target="0.0 0.0 0.0" />
+	<cameras initial="OrthoCamera_01" >
+		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="75" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
+		<ortho id="OrthoCamera_01" direction="x" near="-10.0" far="10.0" left="-10.0" right="10.0" top="10.0" bottom="-10.0" />
+		<perspective id="PerspectiveCamera_02" near="1.0" far="999.0" angle="120" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
 			
 	</cameras>
 		

@@ -12,9 +12,8 @@ bool globalElement::setElement (TiXmlElement * ele)
 	{
 		element = ele;
 		return true;
-	} else {
+	} else 
 		return false;
-	}
 }
 
 bool globalElement::setDrawMode (std::string mode)
@@ -68,7 +67,7 @@ bool globalElement::setCullFace (std::string face)
 	} else if (face == "back") {
 		cullFace = GL_BACK;
 	} else if (face == "both") {
-		cullFace = GL_FRONT | GL_BACK;
+		cullFace = GL_FRONT_AND_BACK;
 	} else {
 		printf( "\nError parsing FACE parameter in <culling>:\nValue must be \"none\", \"front\", \"back\" or \"both\";\n");
 		return false;

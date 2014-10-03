@@ -25,10 +25,13 @@ int main(int argc, char* argv[]) {
 
 		/* Parser here */
 		//XMLScene scene = XMLScene (argv[1]);
-		ANFScene scene2 = ANFScene (argv[1]);
+		//ANFScene scene2 = ANFScene (argv[1]);
 
+		app.setScene(new ANFScene(argv[1]));
 
+		/*
 		app.setScene(new DemoScene());
+		*/
 		app.setInterface(new CGFinterface());
 		
 		app.run();
