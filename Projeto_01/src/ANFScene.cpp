@@ -47,6 +47,9 @@ ANFScene::ANFScene(char *filename)
 	cameras = cameraElement();
 	cameras.setElement (anfElement -> FirstChildElement ( "cameras" ));
 
+	lights = lightElement();
+	lights.setElement (anfElement -> FirstChildElement ( "lights" ));
+
 	/* --------------------- */
 
 	if (global.getElement() == NULL)
@@ -244,6 +247,191 @@ ANFScene::ANFScene(char *filename)
 
 		activeCamera = cameras.getActiveCamera();
 	}
+
+	int lightCounter = 0;
+	float position[3];
+
+	if(lights.getElement() == NULL)
+		printf("Lights Element not found\n");
+	else
+	{
+		printf("Processing Lights\n");
+		TiXmlElement * lightIt = lights.getElement()->FirstChildElement("light");
+
+		for(lightIt; lightIt != NULL; lightIt = lightIt->NextSiblingElement( "light" ))
+		{
+			lightCounter++;
+			printf("The lightCounter is %u, next Light is called %s\n", lightCounter, lightIt->Attribute( "id" ));
+
+			if(lightCounter >= 8)
+				break;
+			else
+			{
+				content = std::string(lightIt->Attribute( "type" ));
+				if(content == "omni")
+				{
+
+					content = std::string(lightIt->Attribute( "pos" ));
+					const char * content_c = content.c_str();
+					if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) != 3)
+						failed = true;
+					else
+					{
+						position[0] = x;
+						position[1] = y;
+						position[2] = z;
+
+						omniLight * omni = new omniLight((lightCounter - 1), position , NULL);
+
+						content = std::string(lightIt->Attribute( "id" ));
+						omni->setId(content);
+
+						content = std::string(lightIt->Attribute( "enabled" ));
+						content == "true"? omni->enable() : omni->disable();
+
+						content = std::string(lightIt->Attribute( "marker" ));
+						content == "true"? omni->enableMarker() : omni->disableMarker();
+
+						TiXmlElement * component = lightIt->FirstChildElement( "component" );
+						content = component->Attribute( "type" );
+						if(content != "ambient")
+							failed = true;
+						else
+						{
+							content_c = component->Attribute( "value" );
+							if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
+								if(!omni->setAmbient(Color(r,g,b,a)))
+									failed = true;
+						}
+
+						component = component->NextSiblingElement( "component" );
+						content = component->Attribute( "type" );
+						if(content != "diffuse")
+							failed = true;
+						else
+						{
+							content_c = component->Attribute( "value" );
+							if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
+								if(!omni->setDiffuse(Color(r,g,b,a)))
+									failed = true;
+						}
+
+						component = component->NextSiblingElement( "component" );
+						content = component->Attribute( "type" );
+						if(content != "specular")
+							failed = true;
+						else
+						{
+							content_c = component->Attribute( "value" );
+							if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
+								if(!omni->setSpecular(Color(r,g,b,a)))
+									failed = true;
+						}
+
+						lights.addLight(omni);
+					}
+				}
+				else if(content == "spot")
+				{
+					content = std::string(lightIt->Attribute( "pos" ));
+					const char * content_c = content.c_str();
+					if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) != 3)
+						failed = true;
+					else
+					{
+						position[0] = x;
+						position[1] = y;
+						position[2] = z;
+
+						content = std::string(lightIt->Attribute( "target" ));
+						float target[3];
+						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
+							failed = true;
+						else
+						{
+							target[0] = x;
+							target[1] = y;
+							target[2] = z;
+							spotLight * spot = new spotLight((lightCounter - 1), position , target);
+
+							content = std::string(lightIt->Attribute( "id" ));
+							spot->setId(content);
+
+							content = std::string(lightIt->Attribute( "enabled" ));
+							content == "true"? spot->enable() : spot->disable();
+
+							content = std::string(lightIt->Attribute( "marker" ));
+							content == "true"? spot->enableMarker() : spot->disableMarker();
+
+							content = std::string(lightIt->Attribute( "pos" ));
+
+							const char * content_c = content.c_str();
+
+							if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) == 3)
+							{
+								if(!spot->setPosition(x,y,z))
+									failed = true;
+							}
+
+							if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) == 3)
+							{
+								if(!(spot->setTarget(x,y,z)))
+									failed = true;
+							}
+
+							float f;
+
+							if(lightIt->QueryFloatAttribute("angle",&f)==TIXML_SUCCESS)
+								spot->setAngle(f);
+
+							if(lightIt->QueryFloatAttribute("exponent",&f)==TIXML_SUCCESS)
+								spot->setExponent(f);
+
+							TiXmlElement * component = lightIt->FirstChildElement( "component" );
+							content = component->Attribute( "type" );
+							if(content != "ambient")
+								failed = true;
+							else
+							{
+								content_c = component->Attribute( "value" );
+								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
+									if(!spot->setAmbient(Color(r,g,b,a)))
+										failed = true;
+							}
+							
+							component = component->NextSiblingElement("component");
+							content = component->Attribute( "type" );
+							if(content != "diffuse")
+								failed = true;
+							else
+							{
+								content_c = component->Attribute( "value" );
+								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
+									if(!spot->setDiffuse(Color(r,g,b,a)))
+										failed = true;
+							}
+
+							component = component->NextSiblingElement( "component" );
+							content = component->Attribute( "type" );
+							if(content != "specular")
+								failed = true;
+							else
+							{
+								content_c = component->Attribute( "value" );
+								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
+									if(!spot->setSpecular(Color(r,g,b,a)))
+										failed = true;
+								cout << failed << "bananas\n";
+							}
+							lights.addLight(spot);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	printf("Parsed %u lights\n", lightCounter);
 	/*
 	content = std::string (cameras.getElement()->Attribute ("initial"));
 	cameras.setInitial (content);
@@ -304,8 +492,9 @@ ANFScene::ANFScene(char *filename)
 
 	}
 	*/
-	
+
 	initCameras();
+	initLights();
 
 	if (failed)
 	{
@@ -325,6 +514,17 @@ void ANFScene::initCameras()
 
 }
 
+void ANFScene::initLights()
+{
+	std::vector<light * > lightVec = lights.getLightSet();
+	for(unsigned int i = 0; i < lightVec.size(); i++)
+	{
+		lightVec[i]->setKc(0.0);
+		lightVec[i]->setKl(0.2);
+		lightVec[i]->setKq(0.0);
+		scene_lights.push_back(lightVec[i]);
+	}
+}
 
 void ANFScene::setCamera(Camera cam)
 {
@@ -382,11 +582,14 @@ void ANFScene::init()
 	activeCamera->updateProjectionMatrix(1,1);
 
 
-	/* ------------- */
+	/* ------------- 
 	light0 = new CGFlight(GL_LIGHT0, light0_pos);
 	light0->setKc(0.0); light0->setKl(0.2); light0->setKq(0.0);
 	light0->disable();
 	light0->enable();
+	*/
+
+	glEnable(GL_LIGHT0);
 
 	cube = new myUnitCube();
 }
@@ -415,7 +618,9 @@ void ANFScene::display()
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
-	light0->draw();
+	//light0->draw();
+	lights.getLightSet()[0]->draw();
+
 	cube->draw();
 
 	// ---- END Primitive drawing section
@@ -428,7 +633,6 @@ void ANFScene::display()
 
 void ANFScene::update(unsigned long t)
 {
-
 }
 
 ANFScene::~ANFScene()

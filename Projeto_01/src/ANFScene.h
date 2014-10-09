@@ -3,6 +3,7 @@
 
 #include "CGFscene.h"
 #include "CGFshader.h"
+#include "CGFlight.h"
 
 #include <algorithm>
 
@@ -10,9 +11,13 @@
 
 #include "globalElement.h"
 #include "cameraElement.h"
+#include "lightElement.h"
 
 #include "PerspectiveCamera.h"
 #include "OrthoCamera.h"
+
+#include "omnilight.h"
+#include "spotlight.h"
 
 #include "myUnitCube.h"
 
@@ -23,6 +28,8 @@ public:
 
 	void initCameras();
 	void setCamera(Camera cam);
+
+	void initLights();
 
 	void init();
 	void display();
@@ -37,6 +44,7 @@ protected:
 
 	globalElement global;
 	cameraElement cameras;
+	lightElement lights;
 	
 	//Camera * activeCamera;
 	std::vector<std::string> usedIDs;

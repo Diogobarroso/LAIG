@@ -18,11 +18,15 @@
     <ClCompile Include="..\src\DemoScene.cpp" />
     <ClCompile Include="..\src\ExampleObject.cpp" />
     <ClCompile Include="..\src\globalElement.cpp" />
+    <ClCompile Include="..\src\light.cpp" />
+    <ClCompile Include="..\src\lightElement.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\myUnitCube.cpp" />
+    <ClCompile Include="..\src\omniLight.cpp" />
     <ClCompile Include="..\src\OrthoCamera.cpp" />
     <ClCompile Include="..\src\Position.cpp" />
     <ClCompile Include="..\src\PerspectiveCamera.cpp" />
+    <ClCompile Include="..\src\spotLight.cpp" />
     <ClCompile Include="..\src\XMLScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,10 +37,14 @@
     <ClInclude Include="..\src\DemoScene.h" />
     <ClInclude Include="..\src\ExampleObject.h" />
     <ClInclude Include="..\src\globalElement.h" />
+    <ClInclude Include="..\src\light.h" />
+    <ClInclude Include="..\src\lightElement.h" />
     <ClInclude Include="..\src\myUnitCube.h" />
+    <ClInclude Include="..\src\omniLight.h" />
     <ClInclude Include="..\src\OrthoCamera.h" />
     <ClInclude Include="..\src\Position.h" />
     <ClInclude Include="..\src\PerspectiveCamera.h" />
+    <ClInclude Include="..\src\spotLight.h" />
     <ClInclude Include="..\src\tinystr.h" />
     <ClInclude Include="..\src\tinyxml.h" />
     <ClInclude Include="..\src\XMLScene.h" />

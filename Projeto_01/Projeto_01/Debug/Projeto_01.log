@@ -1,30 +1,57 @@
-﻿Build started 03/10/2014 13:38:20.
-     1>Project "D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" on node 2 (Build target(s)).
-     1>InitializeBuildStatus:
-         Creating "Debug\Projeto_01.unsuccessfulbuild" because "AlwaysCreate" was specified.
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\CGFlib\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\OrthoCamera.cpp
-         OrthoCamera.cpp
+﻿Build started 09/10/2014 12:12:44.
+     1>Project "C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\CGFlib\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\ANFScene.cpp
+         ANFScene.cpp
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(79): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(130): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(188): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(276): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(302): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(314): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(326): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(338): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(348): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(370): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(376): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(397): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(409): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+     1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(421): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\CGFlib\lib glew32.lib CGFlibd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib tinyxml.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.lib" /MACHINE:X86 Debug\ANFScene.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\CGFlib\lib glew32.lib CGFlibd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib tinyxml.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.lib" /MACHINE:X86 Debug\ANFScene.obj
          Debug\Camera.obj
          Debug\cameraElement.obj
          Debug\Color.obj
          Debug\DemoScene.obj
          Debug\ExampleObject.obj
          Debug\globalElement.obj
+         Debug\light.obj
+         Debug\lightElement.obj
          Debug\main.obj
          Debug\myUnitCube.obj
+         Debug\omniLight.obj
          Debug\OrthoCamera.obj
          Debug\Position.obj
          Debug\PerspectiveCamera.obj
+         Debug\spotLight.obj
          Debug\XMLScene.obj
-         Projeto_01.vcxproj -> D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe
-       FinalizeBuildStatus:
-         Deleting file "Debug\Projeto_01.unsuccessfulbuild".
-         Touching "Debug\Projeto_01.lastbuildstate".
-     1>Done Building Project "D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" (Build target(s)).
+         Projeto_01.vcxproj -> C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe
+     1>Done Building Project "C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:20.68
+Time Elapsed 00:00:01.23

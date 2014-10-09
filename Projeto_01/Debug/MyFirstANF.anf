@@ -21,7 +21,7 @@
 	</cameras>
 		
 	<lights>
-		<light id="Light1" type="omni" enabled="true" marker="true" pos="0.0 0.0 2.0" >
+		<light id="LightBanana" type="omni" enabled="true" marker="true" pos="0.0 0.0 1.0" >
 			<component type="ambient" value="0.5 0.5 0.5 1.0" />
 			<component type="diffuse" value="0.5 0.5 0.5 1.0" />
 			<component type="specular" value="0.5 0.5 0.5 1.0" />
