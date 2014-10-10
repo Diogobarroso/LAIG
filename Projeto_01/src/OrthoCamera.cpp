@@ -77,10 +77,13 @@ void OrthoCamera::updateProjectionMatrix(int width, int height)
 		setZ(10);
 		break;
 	}
+
+	printf ("UPDATE with width = %u, height = %u \n", width, height);
 }
 
 void OrthoCamera::applyView()
 {
+	/*
 	switch (axis) {
 	case 'x':
 		gluLookAt(position[0], position[1], position[2], 0,0,0, 0,0,1);
@@ -92,6 +95,7 @@ void OrthoCamera::applyView()
 		gluLookAt(position[0], position[1], position[2], 0,0,0, 0,1,0);
 		break;
 	}
+	*/
 }
 
 OrthoCamera::~OrthoCamera(void)

@@ -15,7 +15,7 @@
 		
 	<cameras initial="PerspectiveCamera_01" >
 		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="75" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
-		<ortho id="OrthoCamera_01" direction="x" near="-10.0" far="10.0" left="-10.0" right="10.0" top="10.0" bottom="-10.0" />
+		<ortho id="OrthoCamera_01" direction="x" near="-10" far="10.0" left="-10.0" right="10.0" top="10.0" bottom="-10.0" />
 		<perspective id="PerspectiveCamera_02" near="1.0" far="999.0" angle="120" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
 			
 	</cameras>
@@ -48,7 +48,8 @@
 			<appearanceref id="testAppearance" />
 			
 			<primitives>
-				<rectangle xy1="0.0 0.0" xy2="1.0 1.0" />
+				<rectangle xy1="20.0 0.0" xy2="1.0 1.0" />
+				<triangle xyz1="1.0 0.0 0.0" xyz2="0.0 1.0 0.0" xyz3="0.0 0.0 1.0" />
 			</primitives>
 		</node>
 	</graph>

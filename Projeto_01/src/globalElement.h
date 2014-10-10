@@ -1,5 +1,4 @@
-#ifndef _GLOBALEL_H_
-#define _GLOBALEL_H_
+#pragma once
 
 #include <string>
 
@@ -54,5 +53,3 @@ public:
 	bool getLightEnabled () { return lightEnabled; }
 	Color getLightAmbientColor () { return lightAmbientColor; }
 };
-
-#endif

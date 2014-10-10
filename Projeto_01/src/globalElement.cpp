@@ -3,7 +3,6 @@
 
 globalElement::globalElement()
 {
-
 }
 
 bool globalElement::setElement (TiXmlElement * ele)
