@@ -2,6 +2,7 @@
 
 #include "CGFscene.h"
 #include "CGFshader.h"
+#include "CGFlight.h"
 
 #include <algorithm>
 
@@ -9,12 +10,16 @@
 
 #include "globalElement.h"
 #include "cameraElement.h"
+#include "lightElement.h"
 #include "textureElement.h"
 #include "appearenceElement.h"
 #include "graphElement.h"
 
 #include "PerspectiveCamera.h"
 #include "OrthoCamera.h"
+
+#include "omnilight.h"
+#include "spotlight.h"
 
 #include "Appearence.h"
 
@@ -36,6 +41,8 @@ public:
 	void initCameras();
 	void setCamera(Camera cam);
 
+	void initLights();
+
 	void init();
 	void display();
 	void update(unsigned long t);
@@ -52,6 +59,7 @@ protected:
 	textureElement * textures;
 	appearenceElement * appearences;
 	graphElement * graph;
+	lightElement lights;
 	
 	/* Testing */
 
