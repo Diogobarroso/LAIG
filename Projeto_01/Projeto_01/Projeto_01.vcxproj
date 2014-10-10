@@ -12,42 +12,65 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ANFScene.cpp" />
+    <ClCompile Include="..\src\Appearence.cpp" />
+    <ClCompile Include="..\src\appearenceElement.cpp" />
     <ClCompile Include="..\src\Camera.cpp" />
     <ClCompile Include="..\src\cameraElement.cpp" />
     <ClCompile Include="..\src\Color.cpp" />
+    <ClCompile Include="..\src\Cylinder.cpp" />
     <ClCompile Include="..\src\DemoScene.cpp" />
     <ClCompile Include="..\src\ExampleObject.cpp" />
     <ClCompile Include="..\src\globalElement.cpp" />
-    <ClCompile Include="..\src\light.cpp" />
-    <ClCompile Include="..\src\lightElement.cpp" />
+    <ClCompile Include="..\src\graphElement.cpp" />
+    <ClCompile Include="..\src\graphNode.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\myUnitCube.cpp" />
-    <ClCompile Include="..\src\omniLight.cpp" />
     <ClCompile Include="..\src\OrthoCamera.cpp" />
-    <ClCompile Include="..\src\Position.cpp" />
+    <ClCompile Include="..\src\Texture.cpp" />
+    <ClCompile Include="..\src\textureElement.cpp" />
+    <ClCompile Include="..\src\Vector3.cpp" />
     <ClCompile Include="..\src\PerspectiveCamera.cpp" />
-    <ClCompile Include="..\src\spotLight.cpp" />
+    <ClCompile Include="..\src\Primitive.cpp" />
+    <ClCompile Include="..\src\Rectangle.cpp" />
+    <ClCompile Include="..\src\RotateTransformation.cpp" />
+    <ClCompile Include="..\src\ScaleTransformation.cpp" />
+    <ClCompile Include="..\src\Transformation.cpp" />
+    <ClCompile Include="..\src\TranslateTransformation.cpp" />
+    <ClCompile Include="..\src\Triangle.cpp" />
     <ClCompile Include="..\src\XMLScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ANFScene.h" />
+    <ClInclude Include="..\src\Appearence.h" />
+    <ClInclude Include="..\src\appearenceElement.h" />
     <ClInclude Include="..\src\Camera.h" />
     <ClInclude Include="..\src\cameraElement.h" />
     <ClInclude Include="..\src\Color.h" />
+    <ClInclude Include="..\src\Cylinder.h" />
     <ClInclude Include="..\src\DemoScene.h" />
     <ClInclude Include="..\src\ExampleObject.h" />
     <ClInclude Include="..\src\globalElement.h" />
-    <ClInclude Include="..\src\light.h" />
-    <ClInclude Include="..\src\lightElement.h" />
+    <ClInclude Include="..\src\graphElement.h" />
+    <ClInclude Include="..\src\graphNode.h" />
     <ClInclude Include="..\src\myUnitCube.h" />
-    <ClInclude Include="..\src\omniLight.h" />
     <ClInclude Include="..\src\OrthoCamera.h" />
-    <ClInclude Include="..\src\Position.h" />
+    <ClInclude Include="..\src\Texture.h" />
+    <ClInclude Include="..\src\textureElement.h" />
+    <ClInclude Include="..\src\Vector3.h" />
     <ClInclude Include="..\src\PerspectiveCamera.h" />
-    <ClInclude Include="..\src\spotLight.h" />
+    <ClInclude Include="..\src\Primitive.h" />
+    <ClInclude Include="..\src\Rectangle.h" />
+    <ClInclude Include="..\src\RotateTransformation.h" />
+    <ClInclude Include="..\src\ScaleTransformation.h" />
     <ClInclude Include="..\src\tinystr.h" />
     <ClInclude Include="..\src\tinyxml.h" />
+    <ClInclude Include="..\src\Transformation.h" />
+    <ClInclude Include="..\src\TranslateTransformation.h" />
+    <ClInclude Include="..\src\Triangle.h" />
     <ClInclude Include="..\src\XMLScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{89A18068-B93D-4EFD-88DB-4F6DD7DA6636}</ProjectGuid>

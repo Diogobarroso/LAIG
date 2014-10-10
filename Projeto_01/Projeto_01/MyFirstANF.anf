@@ -7,7 +7,7 @@
 		
 		<!-- Valores para cullface: "none", "back" , "front" ou "both" -->
 		<!-- Valores para cullorder : "ccw" ou "cw" -->
-		<culling face="back" order="ccw" />
+		<culling face="none" order="ccw" />
 
 		<lighting doublesided="true" local="true" enabled="true" ambient="0 0.5 0 1.0" />
 			
@@ -15,7 +15,7 @@
 		
 	<cameras initial="PerspectiveCamera_01" >
 		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="75" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
-		<ortho id="OrthoCamera_01" direction="x" near="-10.0" far="10.0" left="-10.0" right="10.0" top="10.0" bottom="-10.0" />
+		<ortho id="OrthoCamera_01" direction="z" near="-10.0" far="10.0" left="-1.0" right="10.0" top="10.0" bottom="-1.0" />
 		<perspective id="PerspectiveCamera_02" near="1.0" far="999.0" angle="120" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
 			
 	</cameras>
@@ -31,6 +31,7 @@
 	</lights>
 				
 	<textures>
+		<texture id="tex_01" file="bricks.jpg" texlength_t="1" texlength_s="1"/>
 	</textures>
 				
 	<appearances>
@@ -49,9 +50,46 @@
 			<appearanceref id="testAppearance" />
 			
 			<primitives>
+<<<<<<< HEAD
 				<rectangle xy1="0.0 0.0" xy2="1.0 1.0" />
 				<rectangle xy1="1.0 0.0" xy2="2.0 1.0" />
+=======
+				<rectangle xy1="4.0 4.0" xy2="2.0 2.0" />
+>>>>>>> 6ec3c838bbc0b48df297f736708fc4e4244efecd
 			</primitives>
+
+			<descendants>
+				<noderef id="rectangle" />
+			</descendants>
 		</node>
+
+		<node id="triangles">
+			<transforms>
+				<transform type="translate" to="2 0 0" />
+			</transforms>
+			
+			<appearanceref id="testAppearance" />
+			
+			<primitives>
+				<triangle xyz1="1.0 0.0 0.0" xyz2="0.0 1.0 0.0" xyz3="0.0 0.0 1.0" />
+				<triangle xyz1="1.0 0.0 0.0" xyz2="1.0 1.0 0.0" xyz3="0.0 1.0 0.0" />
+			</primitives>
+
+		</node>
+
+		<node id="rectangle">
+			<transforms>
+                <transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<primitives>
+				<rectangle xy1="0.0 0.0" xy2="1.0 1.0"/>
+			</primitives>
+
+			<descendants>
+				<noderef id="triangles" />
+			</descendants>
+		</node>
+
 	</graph>
 </anf>

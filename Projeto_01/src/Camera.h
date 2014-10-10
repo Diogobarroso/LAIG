@@ -3,15 +3,15 @@
 #include <string>
 
 #include "CGFcamera.h"
-#include "Position.h"
+#include "Vector3.h"
 
 class Camera : public CGFcamera
 {
 protected:
 	std::string ID;
 	
-	Position pos;
-	Position target;
+	Vector3 pos;
+	Vector3 target;
 public:
 	Camera();
 	
@@ -24,8 +24,8 @@ public:
 
 	std::string getID () { return ID; }
 
-	Position getPos() { return pos; }
-	Position getTarget() { return target; }
+	Vector3 getPos() { return pos; }
+	Vector3 getTarget() { return target; }
 
 	~Camera(void);
 };

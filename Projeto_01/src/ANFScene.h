@@ -1,5 +1,4 @@
-#ifndef _ANFSCENE_H_
-#define _ANFSCENE_H_
+#pragma once
 
 #include "CGFscene.h"
 #include "CGFshader.h"
@@ -12,12 +11,25 @@
 #include "globalElement.h"
 #include "cameraElement.h"
 #include "lightElement.h"
+#include "textureElement.h"
+#include "appearenceElement.h"
+#include "graphElement.h"
 
 #include "PerspectiveCamera.h"
 #include "OrthoCamera.h"
 
 #include "omnilight.h"
 #include "spotlight.h"
+
+#include "Appearence.h"
+
+#include "TranslateTransformation.h"
+#include "RotateTransformation.h"
+#include "ScaleTransformation.h"
+
+#include "Primitive.h"
+#include "Rectangle.h"
+#include "Triangle.h"
 
 #include "myUnitCube.h"
 
@@ -42,26 +54,29 @@ public:
 protected:
 	TiXmlDocument* doc;
 
-	globalElement global;
-	cameraElement cameras;
+	globalElement * global;
+	cameraElement * cameras;
+	textureElement * textures;
+	appearenceElement * appearences;
+	graphElement * graph;
 	lightElement lights;
 	
-	//Camera * activeCamera;
-	std::vector<std::string> usedIDs;
-	/*
-	TiXmlElement* initElement; 
-	TiXmlElement* matsElement;
-	TiXmlElement* textsElement;
-	TiXmlElement* leavesElement;
-	TiXmlElement* nodesElement;
-	TiXmlElement* graphElement;
-	*/
-
 	/* Testing */
 
 	CGFlight* light0;
 	myUnitCube* cube;
 
-};
 
-#endif
+	bool failed;
+	std::vector<std::string> usedIDs;
+
+	void processGlobal ();
+	void processCameras ();
+	void processTextures ();
+	void processAppearences ();
+	void processGraph ();
+
+	bool generateGraph ();
+	void navigateGraph (graphNode * node);
+
+};

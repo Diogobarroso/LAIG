@@ -71,7 +71,7 @@ void DemoScene::display()
 	// Simple object
 	materialAppearance->apply();
 	obj->draw();
-
+	
 	// textured object
 
 	glTranslatef(0,4,0);

@@ -14,7 +14,7 @@ public:
 	float getGreen() {return green;}
 	float getBlue() {return blue;}
 	float getAlpha() {return alpha;}
-
+	
 	GLfloat * getArray();
 };
 

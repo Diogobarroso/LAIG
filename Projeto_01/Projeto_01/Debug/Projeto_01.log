@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 10/10/2014 14:47:48.
      1>Project "C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -31,27 +32,69 @@
                  c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
      1>c:\users\diogo\documents\laig\laig\projeto_01\src\anfscene.cpp(421): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(311) : see declaration of 'sscanf'
+=======
+﻿Build started 10/10/2014 13:39:25.
+     1>Project "D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\Projeto_01.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\CGFlib\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\appearenceElement.cpp
+         appearenceElement.cpp
+>>>>>>> 6ec3c838bbc0b48df297f736708fc4e4244efecd
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\CGFlib\lib glew32.lib CGFlibd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib tinyxml.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.lib" /MACHINE:X86 Debug\ANFScene.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\CGFlib\lib glew32.lib CGFlibd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib tinyxml.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.lib" /MACHINE:X86 Debug\ANFScene.obj
+         Debug\Appearence.obj
+         Debug\appearenceElement.obj
          Debug\Camera.obj
          Debug\cameraElement.obj
          Debug\Color.obj
+         Debug\Cylinder.obj
          Debug\DemoScene.obj
          Debug\ExampleObject.obj
          Debug\globalElement.obj
-         Debug\light.obj
-         Debug\lightElement.obj
+         Debug\graphElement.obj
+         Debug\graphNode.obj
          Debug\main.obj
          Debug\myUnitCube.obj
-         Debug\omniLight.obj
          Debug\OrthoCamera.obj
-         Debug\Position.obj
+         Debug\Texture.obj
+         Debug\textureElement.obj
+         Debug\Vector3.obj
          Debug\PerspectiveCamera.obj
-         Debug\spotLight.obj
+         Debug\Primitive.obj
+         Debug\Rectangle.obj
+         Debug\RotateTransformation.obj
+         Debug\ScaleTransformation.obj
+         Debug\Transformation.obj
+         Debug\TranslateTransformation.obj
+         Debug\Triangle.obj
          Debug\XMLScene.obj
-         Projeto_01.vcxproj -> C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe
-     1>Done Building Project "C:\Users\Diogo\Documents\LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" (Build target(s)).
+     1>CGFlibd.lib(CGFappearance.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFappearance.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFapplication.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFapplication.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFaxis.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFaxis.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFcamera.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFcamera.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFinterface.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFinterface.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFlight.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFlight.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFobject.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFobject.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFscene.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFscene.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFshader.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFshader.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(CGFtexture.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(CGFtexture.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(imagetools.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(imagetools.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>CGFlibd.lib(stb_image.obj) : warning LNK4099: PDB 'vc110.pdb' was not found with 'CGFlibd.lib(stb_image.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc110.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinystr.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinystr.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc100.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinyxml.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinyxml.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc100.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinyxmlerror.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinyxmlerror.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc100.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinyxmlparser.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinyxmlparser.obj)' or at 'D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\vc100.pdb'; linking object as if no debug info
+         Projeto_01.vcxproj -> D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Debug\Projeto_01.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\Projeto_01.unsuccessfulbuild".
+         Touching "Debug\Projeto_01.lastbuildstate".
+     1>Done Building Project "D:\Dropbox\FEUP\3_1 LAIG\LAIG\Projeto_01\Projeto_01\Projeto_01.vcxproj" (Build target(s)).
 
 Build succeeded.
 
+<<<<<<< HEAD
 Time Elapsed 00:00:03.63
+=======
+Time Elapsed 00:00:02.25
+>>>>>>> 6ec3c838bbc0b48df297f736708fc4e4244efecd
