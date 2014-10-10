@@ -50,6 +50,7 @@
 			
 			<primitives>
 				<rectangle xy1="0.0 0.0" xy2="1.0 1.0" />
+				<rectangle xy1="1.0 0.0" xy2="2.0 1.0" />
 			</primitives>
 		</node>
 	</graph>

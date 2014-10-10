@@ -281,7 +281,7 @@ ANFScene::ANFScene(char *filename)
 						position[1] = y;
 						position[2] = z;
 
-						omniLight * omni = new omniLight((lightCounter - 1), position , NULL);
+						omniLight * omni = new omniLight(lightCounter - 1, position , NULL);
 
 						content = std::string(lightIt->Attribute( "id" ));
 						omni->setId(content);
@@ -352,7 +352,7 @@ ANFScene::ANFScene(char *filename)
 							target[0] = x;
 							target[1] = y;
 							target[2] = z;
-							spotLight * spot = new spotLight((lightCounter - 1), position , target);
+							spotLight * spot = new spotLight(lightCounter - 1, position , target);
 
 							content = std::string(lightIt->Attribute( "id" ));
 							spot->setId(content);
@@ -421,7 +421,6 @@ ANFScene::ANFScene(char *filename)
 								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
 									if(!spot->setSpecular(Color(r,g,b,a)))
 										failed = true;
-								cout << failed << "bananas\n";
 							}
 							lights.addLight(spot);
 						}
@@ -620,8 +619,8 @@ void ANFScene::display()
 	// ---- BEGIN Primitive drawing section
 	//light0->draw();
 	lights.getLightSet()[0]->draw();
-
-	cube->draw();
+	
+	//cube->draw();
 
 	// ---- END Primitive drawing section
 
