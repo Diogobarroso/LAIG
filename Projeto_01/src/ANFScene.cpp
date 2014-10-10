@@ -88,6 +88,7 @@ ANFScene::ANFScene(char *filename)
 
 	processGlobal();
 	processCameras();
+	processLights();
 	processTextures();
 	processAppearences();
 	processGraph();
@@ -205,7 +206,7 @@ void ANFScene::display()
 
 	glPolygonMode(GL_FRONT_AND_BACK, global->getDrawMode());
 
-	
+
 	navigateGraph(graph->getRoot());
 
 	light0->draw();
@@ -438,7 +439,7 @@ void ANFScene::processCameras ()
 	initCameras();
 }
 
-void ANFScene::processTextures ()
+void ANFScene::processLights ()
 {
 	/* Block of Variables for processing */
 
@@ -446,171 +447,6 @@ void ANFScene::processTextures ()
 	float r, g, b, a, f, x, y, z;
 	bool failed = false;
 	std::vector<std::string>::iterator it;
-
-	printf ("Processing Textures\n");
-
-	int textureCount = 0;
-	for(TiXmlElement* textureElement = textures->getElement()->FirstChildElement(); textureElement != NULL; textureElement = textureElement->NextSiblingElement())
-	{
-		textureCount ++;
-
-		Texture * texture = new Texture ();
-
-		content = std::string ( textureElement->Attribute("id"));
-
-		it = find (usedIDs.begin(), usedIDs.end(),  content);
-
-		if (it == usedIDs.end())
-		{
-			texture->setID(content);
-		} else {
-			std::cout << "ID " << content << " is already in use\n";
-			failed = true;
-		}
-
-		content = std::string ( textureElement->Attribute("file"));
-		texture->setPath (content);
-
-		if (textureElement->QueryFloatAttribute("texlength_s", &f) == TIXML_SUCCESS)
-			texture->setLength_s (f);
-
-		if (textureElement->QueryFloatAttribute("texlength_t", &f) == TIXML_SUCCESS)
-			texture->setLength_t (f);
-
-		texture->updateTexture();
-
-		textures->addTexture (texture);
-	}
-
-	std::cout << "\tFound " << textureCount << " textures(s)\n";
-
-}
-
-void ANFScene::processAppearences ()
-{
-	/* Block of Variables for processing */
-
-	std::string content;
-	float r, g, b, a, f, x, y, z;
-	bool failed = false;
-	std::vector<std::string>::iterator it;
-
-	int appearenceCount = 0;
-	for(TiXmlElement* appearenceElement = appearences->getElement()->FirstChildElement(); appearenceElement != NULL; appearenceElement = appearenceElement->NextSiblingElement())
-	{
-		appearenceCount++;
-
-		Appearence * appearence = new Appearence();
-
-		content = std::string ( appearenceElement->Attribute("id"));
-
-		it = find (usedIDs.begin(), usedIDs.end(),  content);
-
-		if (it == usedIDs.end())
-		{
-			appearence->setID(content);
-		} else {
-			std::cout << "ID " << content << " is already in use\n";
-			failed = true;
-		}
-
-		if (appearenceElement->QueryFloatAttribute("shininess", &f) == TIXML_SUCCESS)
-			appearence->setShininess(f);
-
-		const char * texRef = appearenceElement->Attribute("textureref");
-
-		if (texRef != NULL)
-		{
-			content = std::string (texRef);
-			Texture * tex = textures->getTexture(content);
-			if (tex != NULL)
-				appearence->setTexture(tex);
-			else
-				std::cout << "Texture with ID = " << content << " not found\n\n";
-		}
-
-		// Booleans to check if it has all components
-		bool hasAmbient = false;
-		bool hasDiffuse = false;
-		bool hasSpecular = false;
-
-		for (TiXmlElement * component = appearenceElement->FirstChildElement(); component!= NULL; component = component->NextSiblingElement())
-		{
-			Color* color = new Color();
-
-			content = std::string ( component->Attribute("value"));
-
-			const char * content_c = content.c_str();
-
-			if(content_c && sscanf(content_c,"%f %f %f %f",&r, &g, &b, &a) == 4)
-			{
-				content = std::string ( component->Attribute("type"));
-				if (content == "ambient")
-				{
-					hasAmbient = true;
-					appearence->setAmbient(color);
-				} else if (content == "diffuse")
-				{
-					hasDiffuse = true;
-					appearence->setDiffuse(color);
-				} else if (content == "specular") {
-					hasSpecular = true;
-					appearence->setSpecular(color);
-				} else {
-					std::cout << "Unsupported component type " << content << " in Appearence " << appearence->getID() << endl << endl;
-				}
-			}
-
-		}
-	}
-	std::cout << "\tFound " << appearenceCount << " appearence(s)\n";
-}
-
-void ANFScene::processGraph ()
-{
-	/* Block of Variables for processing */
-
-	std::string content;
-	float r, g, b, a, f, x, y, z;
-	bool failed = false;
-	std::vector<std::string>::iterator it;
-
-	printf ("Processing Graph\n");
-
-	content = std::string (graph->getElement()->Attribute ("root"));
-	graph->setRootID(content);
-
-	for(TiXmlElement* nodeEle = graph->getElement()->FirstChildElement(); nodeEle != NULL; nodeEle = nodeEle->NextSiblingElement())
-	{
-
-		content = std::string (nodeEle->Attribute ("id"));
-
-		graphNode * node = new graphNode ();
-		node->setElement(nodeEle);
-
-
-		it = find (usedIDs.begin(), usedIDs.end(),  content);
-
-		if (it == usedIDs.end())
-		{
-			node->setID (content);
-		} else {
-			std::cout << "ID " << content << " is already in use\n";
-			failed = true;
-		}
-
-		/* Process Transforms */
-		TiXmlElement* TransformEle = nodeEle->FirstChildElement( "transforms" );
-
-		for (TiXmlElement * transformation = TransformEle->FirstChildElement(); transformation != NULL; transformation = transformation->NextSiblingElement())
-		{
-			content = std::string (transformation->Attribute ( "type" ));
-
-			if ( content == "translate" ) {
-				content = std::string ( transformation->Attribute("to"));
-
-		activeCamera = cameras.getActiveCamera();
-	}
 
 	int lightCounter = 0;
 	float position[3];
@@ -795,9 +631,180 @@ void ANFScene::processGraph ()
 	}
 
 	printf("Parsed %u lights\n", lightCounter);
-	/*
-	content = std::string (cameras.getElement()->Attribute ("initial"));
-	cameras.setInitial (content);
+}
+
+void ANFScene::processTextures ()
+{
+	/* Block of Variables for processing */
+
+	std::string content;
+	float r, g, b, a, f, x, y, z;
+	bool failed = false;
+	std::vector<std::string>::iterator it;
+
+	printf ("Processing Textures\n");
+
+	int textureCount = 0;
+	for(TiXmlElement* textureElement = textures->getElement()->FirstChildElement(); textureElement != NULL; textureElement = textureElement->NextSiblingElement())
+	{
+		textureCount ++;
+
+		Texture * texture = new Texture ();
+
+		content = std::string ( textureElement->Attribute("id"));
+
+		it = find (usedIDs.begin(), usedIDs.end(),  content);
+
+		if (it == usedIDs.end())
+		{
+			texture->setID(content);
+		} else {
+			std::cout << "ID " << content << " is already in use\n";
+			failed = true;
+		}
+
+		content = std::string ( textureElement->Attribute("file"));
+		texture->setPath (content);
+
+		if (textureElement->QueryFloatAttribute("texlength_s", &f) == TIXML_SUCCESS)
+			texture->setLength_s (f);
+
+		if (textureElement->QueryFloatAttribute("texlength_t", &f) == TIXML_SUCCESS)
+			texture->setLength_t (f);
+
+		texture->updateTexture();
+
+		textures->addTexture (texture);
+	}
+
+	std::cout << "\tFound " << textureCount << " textures(s)\n";
+
+}
+
+void ANFScene::processAppearences ()
+{
+	/* Block of Variables for processing */
+
+	std::string content;
+	float r, g, b, a, f, x, y, z;
+	bool failed = false;
+	std::vector<std::string>::iterator it;
+
+	int appearenceCount = 0;
+	for(TiXmlElement* appearenceElement = appearences->getElement()->FirstChildElement(); appearenceElement != NULL; appearenceElement = appearenceElement->NextSiblingElement())
+	{
+		appearenceCount++;
+
+		Appearence * appearence = new Appearence();
+
+		content = std::string ( appearenceElement->Attribute("id"));
+
+		it = find (usedIDs.begin(), usedIDs.end(),  content);
+
+		if (it == usedIDs.end())
+		{
+			appearence->setID(content);
+		} else {
+			std::cout << "ID " << content << " is already in use\n";
+			failed = true;
+		}
+
+		if (appearenceElement->QueryFloatAttribute("shininess", &f) == TIXML_SUCCESS)
+			appearence->setShininess(f);
+
+		const char * texRef = appearenceElement->Attribute("textureref");
+
+		if (texRef != NULL)
+		{
+			content = std::string (texRef);
+			Texture * tex = textures->getTexture(content);
+			if (tex != NULL)
+				appearence->setTexture(tex);
+			else
+				std::cout << "Texture with ID = " << content << " not found\n\n";
+		}
+
+		// Booleans to check if it has all components
+		bool hasAmbient = false;
+		bool hasDiffuse = false;
+		bool hasSpecular = false;
+
+		for (TiXmlElement * component = appearenceElement->FirstChildElement(); component!= NULL; component = component->NextSiblingElement())
+		{
+			Color* color = new Color();
+
+			content = std::string ( component->Attribute("value"));
+
+			const char * content_c = content.c_str();
+
+			if(content_c && sscanf(content_c,"%f %f %f %f",&r, &g, &b, &a) == 4)
+			{
+				content = std::string ( component->Attribute("type"));
+				if (content == "ambient")
+				{
+					hasAmbient = true;
+					appearence->setAmbient(color);
+				} else if (content == "diffuse")
+				{
+					hasDiffuse = true;
+					appearence->setDiffuse(color);
+				} else if (content == "specular") {
+					hasSpecular = true;
+					appearence->setSpecular(color);
+				} else {
+					std::cout << "Unsupported component type " << content << " in Appearence " << appearence->getID() << endl << endl;
+				}
+			}
+
+		}
+	}
+	std::cout << "\tFound " << appearenceCount << " appearence(s)\n";
+}
+
+void ANFScene::processGraph ()
+{
+	/* Block of Variables for processing */
+
+	std::string content;
+	float r, g, b, a, f, x, y, z;
+	bool failed = false;
+	std::vector<std::string>::iterator it;
+
+	printf ("Processing Graph\n");
+
+	content = std::string (graph->getElement()->Attribute ("root"));
+	graph->setRootID(content);
+
+	for(TiXmlElement* nodeEle = graph->getElement()->FirstChildElement(); nodeEle != NULL; nodeEle = nodeEle->NextSiblingElement())
+	{
+
+		content = std::string (nodeEle->Attribute ("id"));
+
+		graphNode * node = new graphNode ();
+		node->setElement(nodeEle);
+
+
+		it = find (usedIDs.begin(), usedIDs.end(),  content);
+
+		if (it == usedIDs.end())
+		{
+			node->setID (content);
+		} else {
+			std::cout << "ID " << content << " is already in use\n";
+			failed = true;
+		}
+
+		/* Process Transforms */
+		TiXmlElement* TransformEle = nodeEle->FirstChildElement( "transforms" );
+
+		for (TiXmlElement * transformation = TransformEle->FirstChildElement(); transformation != NULL; transformation = transformation->NextSiblingElement())
+		{
+			content = std::string (transformation->Attribute ( "type" ));
+
+			if ( content == "translate" ) {
+				content = std::string ( transformation->Attribute("to"));
+
+				const char * content_c = content.c_str();
 
 				if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
 				{
@@ -858,11 +865,8 @@ void ANFScene::processGraph ()
 				printf ( "Rectangle point 1  %f, %f\n" , x,y);
 			}
 
-	}
-	*/
-
-	initCameras();
-	initLights();
+			rect->setX1 (x);
+			rect->setY1 (y);
 
 			content = std::string ( rectangle->Attribute("xy2"));
 
@@ -873,17 +877,8 @@ void ANFScene::processGraph ()
 				printf ( "Rectangle point 2  %f, %f\n\n" , x,y);
 			}
 
-void ANFScene::initLights()
-{
-	std::vector<light * > lightVec = lights.getLightSet();
-	for(unsigned int i = 0; i < lightVec.size(); i++)
-	{
-		lightVec[i]->setKc(0.0);
-		lightVec[i]->setKl(0.2);
-		lightVec[i]->setKq(0.0);
-		scene_lights.push_back(lightVec[i]);
-	}
-}
+			rect->setX2 (x);
+			rect->setY2 (y);
 
 			rect->calculateVertex();
 			node->addPrimitive(rect);
@@ -920,17 +915,12 @@ void ANFScene::initLights()
 
 			content = std::string ( triangle->Attribute("xyz3"));
 
-	/* ------------- 
-	light0 = new CGFlight(GL_LIGHT0, light0_pos);
-	light0->setKc(0.0); light0->setKl(0.2); light0->setKq(0.0);
-	light0->disable();
-	light0->enable();
-	*/
+			content_c = content.c_str();
 
-	glEnable(GL_LIGHT0);
-
-	cube = new myUnitCube();
-}
+			if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
+			{
+				printf ( "Triangle point 3  %f, %f, %f\n" , x,y,z);
+			}
 
 			tri->setV3(Vector3(x,y,z));
 
@@ -961,13 +951,6 @@ void ANFScene::initLights()
 
 	/* Generate Graph */
 
-<<<<<<< HEAD
-	// ---- BEGIN Primitive drawing section
-	//light0->draw();
-	lights.getLightSet()[0]->draw();
-	
-	//cube->draw();
-=======
 	graph->setRoot();
 	generateGraph();
 	
@@ -976,7 +959,6 @@ void ANFScene::initLights()
 bool ANFScene::generateGraph ()
 {
 	std::vector<graphNode*> nodesVec = graph->getNodes();
->>>>>>> 6ec3c838bbc0b48df297f736708fc4e4244efecd
 
 	for (unsigned int i = 0; i < nodesVec.size(); i++)
 	{

@@ -72,6 +72,7 @@ protected:
 
 	void processGlobal ();
 	void processCameras ();
+	void processLights ();
 	void processTextures ();
 	void processAppearences ();
 	void processGraph ();
