@@ -27,10 +27,11 @@ void graphNode::setID (std::string id)
 
 void graphNode::applyTransforms ()
 {
-	for (unsigned int transform = 0; transform < transformations.size(); transform++)
-	{
-		transformations[transform]->apply();
-	}
+	if (! transformations.empty())
+		for (unsigned int transform = 0; transform < transformations.size(); transform++)
+		{
+			transformations[transform]->apply();
+		}
 }
 
 void graphNode::draw(float s, float t)

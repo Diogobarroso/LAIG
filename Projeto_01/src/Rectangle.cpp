@@ -13,7 +13,7 @@ void Rectangle::draw(float s, float t)
 
 	for (unsigned int i = 0; i < 4; i++)
 	{
-		glTexCoord2f ((vertex[i].getX() - translateToOrigin.getX())/s, (vertex[i].getY() - translateToOrigin.getY())/t);
+		glTexCoord2f ((vertex[i].getX())/s, (vertex[i].getY())/t);
 		glVertex3f ( vertex[i].getX(), vertex[i].getY(), vertex[i].getZ());
 	}
 
@@ -29,17 +29,6 @@ void Rectangle::calculateVertex ()
 	addVertex(Vector3(x1,y2,0));
 
 	normalVec = normal(vertex);
-	
-	translateToOrigin = Vector3();
-	if (x1 > x2)
-		translateToOrigin.setX(x2);
-	else
-		translateToOrigin.setX(x1);
-
-	if (y1 > y2)
-		translateToOrigin.setY(y2);
-	else
-		translateToOrigin.setY(y1);
 }
 
 Rectangle::~Rectangle(void)

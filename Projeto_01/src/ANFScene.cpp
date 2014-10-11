@@ -377,6 +377,16 @@ void ANFScene::processCameras ()
 					failed = true;
 			}
 
+			content = std::string ( camera->Attribute("target"));
+
+			content_c = content.c_str();
+
+			if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
+			{
+				if (!cam->setTarget(x,y,z))
+					failed = true;
+			}
+
 			cameras->addCamera(cam);
 		} else if (content == "ortho")
 		{
@@ -947,6 +957,7 @@ void ANFScene::processGraph ()
 			tri->setV3(Vector3(x,y,z));
 
 			tri->updateNormal();
+			tri->calculateSizes();
 
 			node->addPrimitive(tri);
 		}

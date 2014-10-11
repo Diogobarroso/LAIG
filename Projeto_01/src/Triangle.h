@@ -9,6 +9,7 @@ class Triangle :
 private:
 	Vector3 v1, v2, v3;
 	Vector3 normalVec;
+	float a, ca, b, cb, c, cc, sb;
 public:
 	Triangle(void);
 
@@ -17,6 +18,7 @@ public:
 	void setV3 (Vector3 v3) {this->v3 = v3;}
 
 	void draw(float, float);
+	void calculateSizes();
 	void updateNormal();
 
 	~Triangle(void);
