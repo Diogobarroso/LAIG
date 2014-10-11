@@ -32,6 +32,7 @@
 #include "Rectangle.h"
 #include "Triangle.h"
 #include "Cylinder.h"
+#include "Sphere.h"
 
 #include "myUnitCube.h"
 

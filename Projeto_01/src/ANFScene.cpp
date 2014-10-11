@@ -964,7 +964,7 @@ void ANFScene::processGraph ()
 		}
 
 		/* Find all cylinders */
-		for (TiXmlElement * cylinder = PrimitiveEle->FirstChildElement( "cylinder" ); cylinder != NULL; cylinder = cylinder->NextSiblingElement("triangle"))
+		for (TiXmlElement * cylinder = PrimitiveEle->FirstChildElement( "cylinder" ); cylinder != NULL; cylinder = cylinder->NextSiblingElement("cylinder"))
 		{
 			valid = true;
 
@@ -986,6 +986,25 @@ void ANFScene::processGraph ()
 				cyl->setStacks(s);
 
 			node->addPrimitive(cyl);
+		}
+
+		/* Find all cylinders */
+		for (TiXmlElement * sphere = PrimitiveEle->FirstChildElement( "sphere" ); sphere != NULL; sphere = sphere->NextSiblingElement("sphere"))
+		{
+			valid = true;
+
+			Sphere * sph = new Sphere();
+			
+			if (sphere->QueryFloatAttribute("radius",&f)==TIXML_SUCCESS)
+				sph->setRadius(f);
+
+			if (sphere->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
+				sph->setSlices(s);
+
+			if (sphere->QueryIntAttribute("stacks",&s)==TIXML_SUCCESS)
+				sph->setStacks(s);
+
+			node->addPrimitive(sph);
 		}
 
 		/* Process Descendants */

@@ -2,26 +2,24 @@
 #include "primitive.h"
 #include <GL/glu.h>
 
-class Cylinder :
+class Sphere :
 	public Primitive
 {
 private:
 
-	float base, top, height;
+	float radius;
 	int slices, stacks;
 	GLUquadric * quadric;
 
 public:
-	Cylinder(void);
+	Sphere(void);
 
-	void setBase (float b) { base = b; }
-	void setTop (float t) { top = t; }
-	void setHeight (float h) { height = h; }
+	void setRadius (float r) { radius = r; }
 	void setSlices (int s) { slices = s; }
 	void setStacks (int s) { stacks = s; }
 
 	void draw(float, float);
 
-	~Cylinder(void);
+	~Sphere(void);
 };
 
