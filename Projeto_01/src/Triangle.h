@@ -16,7 +16,7 @@ public:
 	void setV2 (Vector3 v2) {this->v2 = v2;}
 	void setV3 (Vector3 v3) {this->v3 = v3;}
 
-	void draw();
+	void draw(float, float);
 	void updateNormal();
 
 	~Triangle(void);

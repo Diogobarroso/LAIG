@@ -33,11 +33,11 @@ void graphNode::applyTransforms ()
 	}
 }
 
-void graphNode::draw()
+void graphNode::draw(float s, float t)
 {
 	for (unsigned int primitive = 0; primitive < primitives.size(); primitive++)
 	{
-		primitives[primitive]->draw();
+		primitives[primitive]->draw(s,t);
 	}
 }
 

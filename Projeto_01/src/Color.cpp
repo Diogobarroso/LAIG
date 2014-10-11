@@ -18,7 +18,12 @@ Color::Color(float r, float g, float b, float a)
 }
 
 GLfloat* Color::getArray () {
-	GLfloat ret [] = {red, blue, green, alpha};
+	GLfloat *ret = (GLfloat*) malloc(4*sizeof(GLfloat));
+
+	ret[0] = red;
+	ret[1] = green;
+	ret[2] = blue;
+	ret[3] = alpha;
 
 	return ret;
 }

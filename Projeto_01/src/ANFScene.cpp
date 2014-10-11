@@ -31,12 +31,9 @@ ANFScene::ANFScene(char *filename)
 
 	/* Block of Variables for processing */
 
-	std::string content;
-	float r, g, b, a, f, x, y, z;
 	failed = false;
-	std::vector<std::string>::iterator it;
-
 	usedIDs = std::vector<std::string> ();
+	appearenceStack = std::stack<Appearence *> ();
 
 	/* -------------------------------- */
 
@@ -88,7 +85,7 @@ ANFScene::ANFScene(char *filename)
 
 	processGlobal();
 	processCameras();
-	processLights();
+	//processLights();
 	processTextures();
 	processAppearences();
 	processGraph();
@@ -100,6 +97,8 @@ ANFScene::ANFScene(char *filename)
 		exit(1);
 	}
 
+
+	generateGraph();
 
 }
 
@@ -171,10 +170,15 @@ void ANFScene::init()
 
 
 	/* ------------- */
+
 	light0 = new CGFlight(GL_LIGHT0, light0_pos);
+	Color * lightColor = new Color (.6,.6,.6,1);
+	light0->setAmbient (lightColor->getArray());
+	light0->setDiffuse (lightColor->getArray());
+	light0->setSpecular (lightColor->getArray());
 	light0->setKc(0.0); light0->setKl(0.2); light0->setKq(0.0);
 	light0->disable();
-	light0->enable();
+	//light0->enable();
 
 	cube = new myUnitCube();
 }
@@ -206,11 +210,9 @@ void ANFScene::display()
 
 	glPolygonMode(GL_FRONT_AND_BACK, global->getDrawMode());
 
+	//light0->draw();
 
 	navigateGraph(graph->getRoot());
-
-	light0->draw();
-	//cube->draw();
 
 	// ---- END Primitive drawing section
 
@@ -232,7 +234,6 @@ void ANFScene::processGlobal ()
 	std::string content;
 	float r, g, b, a, f, x, y, z;
 	std::vector<std::string>::iterator it;
-
 
 	printf ("Processing Globals\n");
 
@@ -314,8 +315,6 @@ void ANFScene::processGlobal ()
 		printf ("\tLighting Element not found\n");
 		failed = true;
 	}
-
-
 }
 
 void ANFScene::processCameras ()
@@ -324,7 +323,6 @@ void ANFScene::processCameras ()
 
 	std::string content;
 	float r, g, b, a, f, x, y, z;
-	bool failed = false;
 	std::vector<std::string>::iterator it;
 
 	printf ("Processing Cameras\n");
@@ -351,8 +349,9 @@ void ANFScene::processCameras ()
 			if (it == usedIDs.end())
 			{
 				cam->setID(content);
+				usedIDs.push_back(content);
 			} else {
-				std::cout << "ID " << content << " is already in use\n";
+				std::cout << "\tID " << content << " is already in use\n";
 				failed = true;
 			}
 
@@ -391,8 +390,9 @@ void ANFScene::processCameras ()
 			if (it == usedIDs.end())
 			{
 				cam->setID(content);
+				usedIDs.push_back(content);
 			} else {
-				std::cout << "ID " << content << " is already in use\n";
+				std::cout << "\tID " << content << " is already in use\n";
 				failed = true;
 			}
 
@@ -445,7 +445,6 @@ void ANFScene::processLights ()
 
 	std::string content;
 	float r, g, b, a, f, x, y, z;
-	bool failed = false;
 	std::vector<std::string>::iterator it;
 
 	int lightCounter = 0;
@@ -598,7 +597,7 @@ void ANFScene::processLights ()
 									if(!spot->setAmbient(Color(r,g,b,a)))
 										failed = true;
 							}
-							
+
 							component = component->NextSiblingElement("component");
 							content = component->Attribute( "type" );
 							if(content != "diffuse")
@@ -639,7 +638,6 @@ void ANFScene::processTextures ()
 
 	std::string content;
 	float r, g, b, a, f, x, y, z;
-	bool failed = false;
 	std::vector<std::string>::iterator it;
 
 	printf ("Processing Textures\n");
@@ -658,8 +656,9 @@ void ANFScene::processTextures ()
 		if (it == usedIDs.end())
 		{
 			texture->setID(content);
+			usedIDs.push_back(content);
 		} else {
-			std::cout << "ID " << content << " is already in use\n";
+			std::cout << "\tID " << content << " is already in use\n";
 			failed = true;
 		}
 
@@ -687,7 +686,6 @@ void ANFScene::processAppearences ()
 
 	std::string content;
 	float r, g, b, a, f, x, y, z;
-	bool failed = false;
 	std::vector<std::string>::iterator it;
 
 	int appearenceCount = 0;
@@ -704,8 +702,9 @@ void ANFScene::processAppearences ()
 		if (it == usedIDs.end())
 		{
 			appearence->setID(content);
+			usedIDs.push_back(content);
 		} else {
-			std::cout << "ID " << content << " is already in use\n";
+			std::cout << "\tID " << content << " is already in use\n";
 			failed = true;
 		}
 
@@ -731,7 +730,7 @@ void ANFScene::processAppearences ()
 
 		for (TiXmlElement * component = appearenceElement->FirstChildElement(); component!= NULL; component = component->NextSiblingElement())
 		{
-			Color* color = new Color();
+
 
 			content = std::string ( component->Attribute("value"));
 
@@ -739,6 +738,7 @@ void ANFScene::processAppearences ()
 
 			if(content_c && sscanf(content_c,"%f %f %f %f",&r, &g, &b, &a) == 4)
 			{
+				Color* color = new Color(r,g,b,a);
 				content = std::string ( component->Attribute("type"));
 				if (content == "ambient")
 				{
@@ -757,6 +757,17 @@ void ANFScene::processAppearences ()
 			}
 
 		}
+
+		if (hasAmbient &&  hasDiffuse && hasSpecular)
+		{
+			appearence->generateAppearence();
+		} else 
+		{
+			std::cout << "Error processing appearance " << appearence->getID() << endl << "Missing at least one of the components\n\n";
+			failed = true;
+		}
+
+		appearences->addAppearence(appearence);
 	}
 	std::cout << "\tFound " << appearenceCount << " appearence(s)\n";
 }
@@ -767,7 +778,6 @@ void ANFScene::processGraph ()
 
 	std::string content;
 	float r, g, b, a, f, x, y, z;
-	bool failed = false;
 	std::vector<std::string>::iterator it;
 
 	printf ("Processing Graph\n");
@@ -789,8 +799,9 @@ void ANFScene::processGraph ()
 		if (it == usedIDs.end())
 		{
 			node->setID (content);
+			usedIDs.push_back(content);
 		} else {
-			std::cout << "ID " << content << " is already in use\n";
+			std::cout << "\tID " << content << " is already in use\n";
 			failed = true;
 		}
 
@@ -809,8 +820,6 @@ void ANFScene::processGraph ()
 				if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
 				{
 					node->addTransformation(new TranslateTransformation (x,y,z));
-
-					printf ( "Translation added to %f, %f, %f\n\n" , x,y,z);
 				}
 
 			} else if ( content == "rotate") {
@@ -826,7 +835,7 @@ void ANFScene::processGraph ()
 					rtransform->setAngle (f);
 
 				node->addTransformation(rtransform);
-				printf ( "Rotation added in %c axis, by %f degrees\n\n" , rtransform->getAxis() , rtransform->getAngle());
+
 			} else if (content == "scale") {
 				content = std::string ( transformation->Attribute("factor"));
 
@@ -835,12 +844,25 @@ void ANFScene::processGraph ()
 				if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
 				{
 					node->addTransformation(new ScaleTransformation (x,y,z));
-					printf ( "Scale added by %f, %f, %f\n\n" , x,y,z);
 				}
 			}
 		}
 
 		/* Process Appearence */
+
+		TiXmlElement* appElement = nodeEle->FirstChildElement( "appearanceref" );
+		content = std::string (appElement->Attribute("id"));
+		Appearence * app = appearences->getAppearence(content);
+
+		if (content != "inherit" && app != NULL)
+		{
+			node->setAppearence(app);
+		} else if (content != "inherit") {
+			std::cout << "\tError\n\tAppearence id = " << content << " does not exist in " << node->getID() << endl << endl;
+			failed = true;
+		} else {
+			node->setAppearence(NULL);
+		}		
 
 		/* Each node must have a non-empty primitive section or a descendants section */
 		bool valid = false;
@@ -860,9 +882,9 @@ void ANFScene::processGraph ()
 
 			const char * content_c = content.c_str();
 
-			if(content_c && sscanf(content_c,"%f %f",&x, &y) == 2)
+			if(!content_c || sscanf(content_c,"%f %f",&x, &y) != 2)
 			{
-				printf ( "Rectangle point 1  %f, %f\n" , x,y);
+				std::cout << "Error parsing rectangle Point 1 in " << node->getID() << endl << endl;
 			}
 
 			rect->setX1 (x);
@@ -872,9 +894,9 @@ void ANFScene::processGraph ()
 
 			content_c = content.c_str();
 
-			if(content_c && sscanf(content_c,"%f %f",&x, &y) == 2)
+			if(!content_c || sscanf(content_c,"%f %f",&x, &y) != 2)
 			{
-				printf ( "Rectangle point 2  %f, %f\n\n" , x,y);
+				std::cout << "Error parsing rectangle Point 2 in " << node->getID() << endl << endl;
 			}
 
 			rect->setX2 (x);
@@ -895,9 +917,9 @@ void ANFScene::processGraph ()
 
 			const char * content_c = content.c_str();
 
-			if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
+			if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
 			{
-				printf ( "Triangle point 1  %f, %f, %f\n" , x,y,z);
+				std::cout << "Error parsing triangle Point 1 in " << node->getID() << endl << endl;
 			}
 
 			tri->setV1(Vector3(x,y,z));
@@ -906,9 +928,9 @@ void ANFScene::processGraph ()
 
 			content_c = content.c_str();
 
-			if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
+			if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
 			{
-				printf ( "Triangle point 2  %f, %f, %f\n" , x,y,z);
+				std::cout << "Error parsing triangle Point 2 in " << node->getID() << endl << endl;
 			}
 
 			tri->setV2(Vector3(x,y,z));
@@ -917,9 +939,9 @@ void ANFScene::processGraph ()
 
 			content_c = content.c_str();
 
-			if(content_c && sscanf(content_c,"%f %f %f",&x, &y, &z) == 3)
+			if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
 			{
-				printf ( "Triangle point 3  %f, %f, %f\n" , x,y,z);
+				std::cout << "Error parsing triangle Point 3 in " << node->getID() << endl << endl;
 			}
 
 			tri->setV3(Vector3(x,y,z));
@@ -952,8 +974,6 @@ void ANFScene::processGraph ()
 	/* Generate Graph */
 
 	graph->setRoot();
-	generateGraph();
-	
 }
 
 bool ANFScene::generateGraph ()
@@ -981,11 +1001,25 @@ bool ANFScene::generateGraph ()
 
 void ANFScene::navigateGraph (graphNode * node)
 {
+	Appearence * actualAppearence = node->getAppearence();
+
+	if (actualAppearence != NULL)
+	{
+		appearenceStack.push(actualAppearence);
+	}
+
 	node->setVisited(true);
 	// Process node
 	glPushMatrix();
+
 	node->applyTransforms();
-	node->draw();
+	appearenceStack.top()->apply();
+
+	Texture * tex = appearenceStack.top()->getTexture();
+	if (tex == NULL)
+		node->draw(1,1);
+	else
+		node->draw(tex->getLength_s(), tex->getLength_t());
 
 	std::vector <graphNode *> descendants = node->getDescendants();
 
@@ -998,8 +1032,12 @@ void ANFScene::navigateGraph (graphNode * node)
 			navigateGraph (descendants[desc]);
 		}
 	}
-	
+
 	// Reverse node processing
+	if (actualAppearence != NULL)
+	{
+		appearenceStack.pop();
+	}
 	glPopMatrix();
 	node->setVisited(false);
 }

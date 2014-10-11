@@ -23,7 +23,7 @@ Vector3 Primitive::normal( std::vector<Vector3> vertexVec )
 	return result;
 }
 
-void Primitive::draw () {}
+void Primitive::draw (float, float) {}
 
 Primitive::~Primitive(void)
 {

@@ -30,6 +30,8 @@ public:
 
 	std::string getID () { return id; }
 
+	Texture * getTexture() { return texture; }
+
 	void generateAppearence ();
 
 	void apply () { appearence->apply(); }

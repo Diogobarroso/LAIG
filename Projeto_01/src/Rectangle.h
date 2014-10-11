@@ -5,7 +5,7 @@ class Rectangle :
 {
 private:
 	float x1, x2, y1, y2;
-
+	Vector3 translateToOrigin;
 	Vector3 normalVec;
 	
 public:
@@ -16,7 +16,7 @@ public:
 	void setY1 (float y1) { this->y1 = y1; }
 	void setY2 (float y2) { this->y2 = y2; }
 
-	void draw();
+	void draw(float, float);
 	void calculateVertex ();
 
 	~Rectangle(void);

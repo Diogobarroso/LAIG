@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/gl.h>
+#include <stdlib.h>
 
 class Color
 {

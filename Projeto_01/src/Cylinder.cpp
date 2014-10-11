@@ -5,7 +5,7 @@ Cylinder::Cylinder(void)
 {
 }
 
-void Cylinder::draw()
+void Cylinder::draw(float, float)
 {
 	glBegin (GL_QUADS);
 

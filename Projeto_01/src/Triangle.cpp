@@ -5,7 +5,7 @@ Triangle::Triangle(void)
 {
 }
 
-void Triangle::draw()
+void Triangle::draw(float s, float t)
 {
 	glBegin(GL_TRIANGLES);
 

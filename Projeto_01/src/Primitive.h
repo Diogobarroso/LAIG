@@ -15,7 +15,7 @@ protected:
 public:
 	Primitive(void);
 
-	virtual void draw();
+	virtual void draw(float, float);
 	
 	~Primitive(void);
 };

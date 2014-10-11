@@ -5,6 +5,7 @@
 #include "CGFlight.h"
 
 #include <algorithm>
+#include <stack>
 
 #include "tinyxml.h"
 
@@ -69,6 +70,7 @@ protected:
 
 	bool failed;
 	std::vector<std::string> usedIDs;
+	std::stack<Appearence *> appearenceStack;
 
 	void processGlobal ();
 	void processCameras ();
