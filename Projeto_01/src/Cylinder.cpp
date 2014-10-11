@@ -3,31 +3,23 @@
 
 Cylinder::Cylinder(void)
 {
+	quadric = gluNewQuadric();
+	gluQuadricTexture(quadric,true);
 }
 
 void Cylinder::draw(float, float)
 {
-	glBegin (GL_QUADS);
+	glPushMatrix();
+	glRotated(180,1,0,0);
+	gluDisk(quadric,0,base,slices,5);
+	glPopMatrix();
 
-	glNormal3f (normalVec.getX(), normalVec.getY(), normalVec.getZ());
+	gluCylinder(quadric, base, top, height, slices, stacks);
 
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		glVertex3f ( vertex[i].getX(), vertex[i].getY(), vertex[i].getZ());
-	}
-
-	glEnd();
-
-}
-
-void Cylinder::calculateVertex ()
-{
-	addVertex(Vector3(x1,y1,0));
-	addVertex(Vector3(x2,y1,0));
-	addVertex(Vector3(x2,y2,0));
-	addVertex(Vector3(x1,y2,0));
-
-	normalVec = normal(vertex);
+	glPushMatrix();
+	glTranslated(0,0,height);
+	gluDisk(quadric,0,top,slices,5);
+	glPopMatrix();
 }
 
 Cylinder::~Cylinder(void)

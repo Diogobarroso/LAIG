@@ -789,6 +789,7 @@ void ANFScene::processGraph ()
 	std::string content;
 	float r, g, b, a, f, x, y, z;
 	std::vector<std::string>::iterator it;
+	int s;
 
 	printf ("Processing Graph\n");
 
@@ -960,6 +961,31 @@ void ANFScene::processGraph ()
 			tri->calculateSizes();
 
 			node->addPrimitive(tri);
+		}
+
+		/* Find all cylinders */
+		for (TiXmlElement * cylinder = PrimitiveEle->FirstChildElement( "cylinder" ); cylinder != NULL; cylinder = cylinder->NextSiblingElement("triangle"))
+		{
+			valid = true;
+
+			Cylinder * cyl = new Cylinder();
+			
+			if (cylinder->QueryFloatAttribute("base",&f)==TIXML_SUCCESS)
+				cyl->setBase(f);
+
+			if (cylinder->QueryFloatAttribute("top",&f)==TIXML_SUCCESS)
+				cyl->setTop(f);
+
+			if (cylinder->QueryFloatAttribute("height",&f)==TIXML_SUCCESS)
+				cyl->setHeight(f);
+			
+			if (cylinder->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
+				cyl->setSlices(s);
+
+			if (cylinder->QueryIntAttribute("stacks",&s)==TIXML_SUCCESS)
+				cyl->setStacks(s);
+
+			node->addPrimitive(cyl);
 		}
 
 		/* Process Descendants */

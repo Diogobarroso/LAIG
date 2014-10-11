@@ -31,6 +31,7 @@
 #include "Primitive.h"
 #include "Rectangle.h"
 #include "Triangle.h"
+#include "Cylinder.h"
 
 #include "myUnitCube.h"
 
