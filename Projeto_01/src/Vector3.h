@@ -18,7 +18,9 @@ public:
 	void setZ (float newZ) { z = newZ; }
 
 	void normalize();
-
-	Vector3& operator+= (const Vector3& vec2);
+	
+	Vector3 operator+ (const Vector3& v2);
+	Vector3 operator- (const Vector3& v2);
+	Vector3 operator* (float s);
 };
 

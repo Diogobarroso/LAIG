@@ -14,9 +14,9 @@ Vector3 Primitive::normal( std::vector<Vector3> vertexVec )
 		Vector3 currentVertex = vertexVec[i];
 		Vector3 nextVertex = vertexVec[(i + 1) % vertexVec.size()];
 
-		result.setX ( (currentVertex.getY() - nextVertex.getY ()) * (currentVertex.getZ() + nextVertex.getZ()) );
-		result.setX ( (currentVertex.getZ() - nextVertex.getZ ()) * (currentVertex.getX() + nextVertex.getX()) );
-		result.setX ( (currentVertex.getX() - nextVertex.getX ()) * (currentVertex.getY() + nextVertex.getY()) );
+		result.setX ( result.getX() + (currentVertex.getY() - nextVertex.getY ()) * (currentVertex.getZ() + nextVertex.getZ()) );
+		result.setY ( result.getY() + (currentVertex.getZ() - nextVertex.getZ ()) * (currentVertex.getX() + nextVertex.getX()) );
+		result.setZ ( result.getZ() + (currentVertex.getX() - nextVertex.getX ()) * (currentVertex.getY() + nextVertex.getY()) );
 	}
 
 	result.normalize();

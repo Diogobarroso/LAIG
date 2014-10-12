@@ -13,9 +13,9 @@
 
 	</globals>
 
-	<cameras initial="OrthoCamera_01" >
-		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="75" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
-		<ortho id="OrthoCamera_01" direction="y" near="-10.0" far="10.0" left="-1.0" right="10.0" top="10.0" bottom="-1.0" />
+	<cameras initial="PerspectiveCamera_01" >
+		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="75" pos="15.0 15.0 15.0" target="0.0 0.0 0.0" />
+		<ortho id="OrthoCamera_01" direction="z" near="-10.0" far="10.0" left="-10.0" right="10.0" top="10.0" bottom="-10.0" />
 		<perspective id="PerspectiveCamera_02" near="1.0" far="999.0" angle="120" pos="5.0 5.0 5.0" target="0.0 0.0 0.0" />
 
 	</cameras>
@@ -64,14 +64,12 @@
 	<graph root="graphRoot">
 		<node id="graphRoot">
 			<transforms>
-				<transform type="rotate" axis="y" angle="90" />
-				<transform type="rotate" axis="x" angle="-90" />
 			</transforms>
 			
 			<appearanceref id="bricks" />
 			
 			<primitives>
-				<cylinder base="2.0" top="1.0" height="4.0" slices="20" stacks="5" />
+                <torus inner="5" outer="1" slices="32" loops="16" />
 			</primitives>
 
 			<descendants>

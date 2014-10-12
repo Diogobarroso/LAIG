@@ -97,6 +97,11 @@ ANFScene::ANFScene(char *filename)
 		exit(1);
 	}
 
+	Vector3 v1 = Vector3(10,5,0);
+	Vector3 v2 = Vector3(1,2,3);
+
+	Vector3 v3 = v1 + v2;
+	Vector3 v4 = v3 * .5;
 
 	generateGraph();
 
@@ -1005,6 +1010,30 @@ void ANFScene::processGraph ()
 				sph->setStacks(s);
 
 			node->addPrimitive(sph);
+		}
+
+		/* Find all torus */
+		for (TiXmlElement * torus = PrimitiveEle->FirstChildElement( "torus" ); torus != NULL; torus = torus->NextSiblingElement("torus"))
+		{
+			valid = true;
+
+			Torus * tor = new Torus();
+			
+			if (torus->QueryFloatAttribute("inner",&f)==TIXML_SUCCESS)
+				tor->setInner(f);
+
+			if (torus->QueryFloatAttribute("outer",&f)==TIXML_SUCCESS)
+				tor->setOuter(f);
+
+			if (torus->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
+				tor->setSlices(s);
+
+			if (torus->QueryIntAttribute("loops",&s)==TIXML_SUCCESS)
+				tor->setLoops(s);
+
+			tor->generateVertices();
+
+			node->addPrimitive(tor);
 		}
 
 		/* Process Descendants */
