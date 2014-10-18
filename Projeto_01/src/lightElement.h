@@ -15,6 +15,7 @@ public:
 	bool setElement(TiXmlElement * elem);
 	TiXmlElement * getElement();
 	vector<light * > getLightSet();
+	light * getLight(int i);
 
 	void addLight(light *light);
 };

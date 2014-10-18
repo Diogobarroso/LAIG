@@ -3,7 +3,8 @@
 #include "ANFScene.h"
 
 // Vector3s for two lights
-float light0_pos[4] = {1, 2, 1, 1};
+
+
 
 ANFScene::ANFScene(char *filename)
 {
@@ -147,13 +148,13 @@ void ANFScene::init()
 
 	/* ------------- */
 
-	light0 = new CGFlight(GL_LIGHT0, light0_pos);
-	Color * lightColor = new Color (.6,.6,.6,1);
-	light0->setAmbient (lightColor->getArray());
-	light0->setDiffuse (lightColor->getArray());
-	light0->setSpecular (lightColor->getArray());
-	light0->setKc(0.0); light0->setKl(0.2); light0->setKq(0.0);
-	light0->disable();
+	for(unsigned int i = 0; i < lights.getLightSet().size(); i++)
+	{
+		lights.getLight(i)->setKc(0.0);
+		lights.getLight(i)->setKl(0.2);
+		lights.getLight(i)->setKq(0.0);
+		scene_lights.push_back(lights.getLight(i));
+	}
 	//light0->enable();
 
 	cube = new myUnitCube();
@@ -188,6 +189,8 @@ void ANFScene::display()
 	glPolygonMode(GL_FRONT_AND_BACK, global->getDrawMode());
 
 	//light0->draw();
+	for(int i = 0; i < lights.getLightSet().size(); i++)
+		lights.getLight(i)->draw();
 
 	navigateGraph(graph->getRoot());
 
@@ -449,7 +452,7 @@ void ANFScene::processLights ()
 		printf("Processing Lights\n");
 		TiXmlElement * lightIt = lights.getElement()->FirstChildElement("light");
 
-		for(lightIt; lightIt != NULL; lightIt = lightIt->NextSiblingElement( "light" ))
+		for(; lightIt != NULL; lightIt = lightIt->NextSiblingElement( "light" ))
 		{
 			lightCounter++;
 			printf("The lightCounter is %u, next Light is called %s\n", lightCounter, lightIt->Attribute( "id" ));
@@ -472,10 +475,10 @@ void ANFScene::processLights ()
 						position[1] = y;
 						position[2] = z;
 
-						omniLight * omni = new omniLight(lightCounter - 1, position , NULL);
+						omniLight * omni = new omniLight(GL_LIGHT0 + lightCounter - 1, position , NULL);
 
-						content = std::string(lightIt->Attribute( "id" ));
-						omni->setId(content);
+						//content = std::string(lightIt->Attribute( "id" ));
+						//omni->setId(content);
 
 						content = std::string(lightIt->Attribute( "enabled" ));
 						content == "true"? omni->enable() : omni->disable();
@@ -535,7 +538,8 @@ void ANFScene::processLights ()
 						position[2] = z;
 
 						content = std::string(lightIt->Attribute( "target" ));
-						float target[3];
+						float target[4];
+						float tmp[4];
 						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
 							failed = true;
 						else
@@ -543,10 +547,11 @@ void ANFScene::processLights ()
 							target[0] = x;
 							target[1] = y;
 							target[2] = z;
-							spotLight * spot = new spotLight(lightCounter - 1, position , target);
+							target[3] = 1.0;
+							spotLight * spot = new spotLight(GL_LIGHT0 + lightCounter - 1, position , target);
 
-							content = std::string(lightIt->Attribute( "id" ));
-							spot->setId(content);
+							//content = std::string(lightIt->Attribute( "id" ));
+							//spot->setId(content);
 
 							content = std::string(lightIt->Attribute( "enabled" ));
 							content == "true"? spot->enable() : spot->disable();
@@ -558,16 +563,15 @@ void ANFScene::processLights ()
 
 							const char * content_c = content.c_str();
 
-							if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) == 3)
+							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
 							{
-								if(!spot->setPosition(x,y,z))
-									failed = true;
+								tmp[3] = 1.0;
+								spot->setPosition(tmp);
 							}
-
-							if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) == 3)
+							
+							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
 							{
-								if(!(spot->setTarget(x,y,z)))
-									failed = true;
+								spot->setTarget(tmp);
 							}
 
 							float f;
@@ -585,43 +589,43 @@ void ANFScene::processLights ()
 							else
 							{
 								content_c = component->Attribute( "value" );
-								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
-									if(!spot->setAmbient(Color(r,g,b,a)))
-										failed = true;
-							}
+								if(content_c && sscanf(content_c, "%f %f %f %f", &tmp[0], &tmp[1], &tmp[2], &tmp[3]) == 4)
+									spot->setAmbient(tmp);
 
-							component = component->NextSiblingElement("component");
-							content = component->Attribute( "type" );
-							if(content != "diffuse")
-								failed = true;
-							else
-							{
-								content_c = component->Attribute( "value" );
-								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
-									if(!spot->setDiffuse(Color(r,g,b,a)))
-										failed = true;
-							}
+								component = component->NextSiblingElement("component");
+								content = component->Attribute( "type" );
+								if(content != "diffuse")
+									failed = true;
+								else
+								{
+									content_c = component->Attribute( "value" );
+									if(content_c && sscanf(content_c, "%f %f %f %f", &tmp[0], &tmp[1], &tmp[2], &tmp[3]) == 4)
+										spot->setDiffuse(tmp);
+								}
 
-							component = component->NextSiblingElement( "component" );
-							content = component->Attribute( "type" );
-							if(content != "specular")
-								failed = true;
-							else
-							{
-								content_c = component->Attribute( "value" );
-								if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
-									if(!spot->setSpecular(Color(r,g,b,a)))
-										failed = true;
+
+								component = component->NextSiblingElement( "component" );
+								content = component->Attribute( "type" );
+								if(content != "specular")
+									failed = true;
+								else
+								{
+									content_c = component->Attribute( "value" );
+									if(content_c && sscanf(content_c, "%f %f %f %f", &tmp[0], &tmp[1], &tmp[2], &tmp[3]) == 4)
+										spot->setSpecular(tmp);
+								}
+
+								glEnable(GL_LIGHT0 + lightCounter - 1);
+								lights.addLight(spot);
 							}
-							lights.addLight(spot);
 						}
 					}
 				}
 			}
 		}
-	}
 
-	printf("Parsed %u lights\n", lightCounter);
+		printf("Parsed %u lights\n", lightCounter);
+	}
 }
 
 void ANFScene::processTextures ()

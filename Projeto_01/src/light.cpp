@@ -6,7 +6,7 @@ bool light::enable() {CGFlight::enable(); enabled = true; return true;}
 
 bool light::disable() {CGFlight::disable();enabled = false; return true;}
 
-bool light::setId(std::string id) {this->id = id; return true; }
+bool light::setId(int id) {this->id = id; return true; }
 
 bool light::setAmbient(Color col) {ambient = col; return true; }
 
@@ -32,5 +32,8 @@ Vector3 light::getPosition() {return pos; }
 
 void light::draw()
 {
-	CGFlight::draw();
+	if(marker)
+		CGFlight::draw();
+	else
+		CGFlight::update();
 }

@@ -7,7 +7,7 @@
 
 class light: public CGFlight {
 protected:
-	std::string id;
+	int id;
 	bool enabled;
 	bool marker;
 	Color ambient;
@@ -19,7 +19,7 @@ public:
 	std::string getId();
 	bool enable();
 	bool disable();
-	bool setId(std::string id);
+	bool setId(int id);
 	bool setAmbient(Color col);
 	bool setDiffuse(Color col);
 	bool setSpecular(Color col);
@@ -32,6 +32,9 @@ public:
 	Color getDiffuse();
 	Color getSpecular();
 	Vector3 getPosition();
+
+	virtual Vector3 * getTarget() {return NULL;};
+	virtual float * getExponent() {return NULL;};
 
 	void draw();
 };

@@ -72,7 +72,6 @@ protected:
 	
 	/* Testing */
 
-	CGFlight* light0;
 	myUnitCube* cube;
 
 	bool failed;

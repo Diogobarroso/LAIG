@@ -1,10 +1,82 @@
+#include "CGFlight.h"
+
+#include "CGFapplication.h"
+
 #include "spotLight.h"
 
-float spotLight::getAngle() { return angle;}
-float spotLight::getExponent() {return exponent; }
+spotLight::spotLight(unsigned int lightid, float* pos, float *dir):light(lightid, pos, dir)
+{
+	id = lightid;
+	for(int i = 0; i < 4; i++)
+	{
+		position[i] = pos[i];
+		direction[i] = dir[i];
+	}
+	//CGFlight::CGFlight(lightid, pos, dir);
+}
 
-bool spotLight::setAngle(float a) {angle = a; return true; }
-bool spotLight::setExponent(float e) {exponent = e; return true; }
-bool spotLight::setTarget(float x, float y, float z) {target = Vector3(x,y,z); return true;}
+void spotLight::setAmbient(float* li) {
+	for(int i = 0; i < 4; i++)
+		ambient[i] = li[i];
+	CGFlight::setAmbient(li);
+}
 
-spotLight::spotLight(unsigned int lightid, float* pos, float *dir):light(lightid, pos, dir) {}
+void spotLight::setDiffuse(float* li) {
+	for(int i = 0; i < 4; i++)
+		diffuse [i] = li[i];
+	CGFlight::setDiffuse(li);
+}
+
+void spotLight::setSpecular(float* li) {
+	for(int i = 0; i < 4; i++)
+		specular[i] = li[i];
+	CGFlight::setSpecular(li);
+}
+
+void spotLight::enable() {
+	enabled=true;
+	CGFlight::enable();
+}
+
+void spotLight::disable() {
+	enabled=false;
+	CGFlight::disable();
+}
+
+void spotLight::update() {
+	CGFlight::update();
+}
+
+void spotLight::draw() {
+	if(enabled)
+		CGFlight::draw();
+	else
+		CGFlight::update();
+}
+
+void spotLight::setKc(float f) { CGFlight::setKc(f); }
+void spotLight::setKl(float f) { CGFlight::setKc(f); }
+void spotLight::setKq(float f) { CGFlight::setKc(f); }
+
+void spotLight::setAngle(float a) { CGFlight::setAngle(a); }
+
+
+void spotLight::setExponent(float e) { exponent = e; glLightf(id, GL_SPOT_EXPONENT, exponent); }
+
+void spotLight::setPosition(float * p)
+{
+	for(int i = 0; i < 4; i++)
+	{
+		position[i] = p[i];
+		direction[i] = target[i] - position[i];
+	}
+}
+
+void spotLight::setTarget(float * t)
+{
+	for(int i = 0; i < 3; i++)
+	{
+		target[i] = t[i];
+		direction[i] = target[i] - position[i];
+	}
+}

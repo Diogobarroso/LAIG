@@ -12,3 +12,8 @@ bool lightElement::setElement(TiXmlElement * elem) {element = elem; return true;
 TiXmlElement * lightElement::getElement() {return element; }
 
 vector< light * > lightElement::getLightSet() {return lightSet; }
+
+light * lightElement::getLight(int i)
+{
+	return lightSet[i];
+}
