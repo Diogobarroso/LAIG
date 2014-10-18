@@ -540,7 +540,7 @@ void ANFScene::processLights ()
 
 						content = std::string(lightIt->Attribute( "target" ));
 						float target[4];
-						float tmp[4];
+						float tmp[5];
 						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
 							failed = true;
 						else
@@ -572,6 +572,7 @@ void ANFScene::processLights ()
 							
 							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
 							{
+								tmp[3] = 0.0;
 								spot->setTarget(tmp);
 							}
 
