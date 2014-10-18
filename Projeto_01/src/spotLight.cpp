@@ -65,7 +65,7 @@ void spotLight::setExponent(float e) { exponent = e; glLightf(id, GL_SPOT_EXPONE
 
 void spotLight::setPosition(float * p)
 {
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < 3; i++)
 	{
 		position[i] = p[i];
 		direction[i] = target[i] - position[i];

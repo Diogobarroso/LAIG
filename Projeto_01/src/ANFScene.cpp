@@ -443,7 +443,7 @@ void ANFScene::processLights ()
 	std::vector<std::string>::iterator it;
 
 	int lightCounter = 0;
-	float position[3];
+	float position[4];
 
 	if(lights.getElement() == NULL)
 		printf("Lights Element not found\n");
@@ -533,6 +533,7 @@ void ANFScene::processLights ()
 						failed = true;
 					else
 					{
+						printf("1\n");
 						position[0] = x;
 						position[1] = y;
 						position[2] = z;
