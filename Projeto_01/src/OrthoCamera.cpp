@@ -59,39 +59,31 @@ void OrthoCamera::updateProjectionMatrix(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho (left, right, bottom, top, near, far);
+}
+
+void OrthoCamera::applyView()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho (left, right, bottom, top, near, far);
 	
 	switch (axis) {
 	case 'x':
 		setX(10);
 		setY(0);
 		setZ(0);
+		gluLookAt(position[0], position[1], position[2], 0,0,0, 0,0,1);
 		break;
 	case 'y':
 		setX(0);
 		setY(10);
 		setZ(0);
+		gluLookAt(position[0], position[1], position[2], 0,0,0, 1,0,0);
 		break;
 	case 'z':
 		setX(0);
 		setY(0);
 		setZ(10);
-		break;
-	}
-
-	printf ("UPDATE with width = %u, height = %u \n", width, height);
-}
-
-void OrthoCamera::applyView()
-{
-	
-	switch (axis) {
-	case 'x':
-		gluLookAt(position[0], position[1], position[2], 0,0,0, 0,0,1);
-		break;
-	case 'y':
-		gluLookAt(position[0], position[1], position[2], 0,0,0, 1,0,0);
-		break;
-	case 'z':
 		gluLookAt(position[0], position[1], position[2], 0,0,0, 0,1,0);
 		break;
 	}

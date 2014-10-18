@@ -18,7 +18,6 @@ private:
 	std::vector <Transformation *> transformations;
 	std::vector <std::string> descendantsID;
 	Appearence * appearence;
-
 	bool visited;
 
 public:
@@ -47,6 +46,8 @@ public:
 	void applyMaterial () { appearence->apply(); }
 	void applyTransforms ();
 	void draw (float s, float t);
+
+	float matrix [16];
 
 	~graphNode(void);
 };

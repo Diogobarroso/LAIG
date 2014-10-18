@@ -3,6 +3,7 @@
 #include "CGFscene.h"
 #include "CGFshader.h"
 #include "CGFlight.h"
+#include "CGFapplication.h"
 
 #include <algorithm>
 #include <stack>
@@ -42,9 +43,6 @@ class ANFScene : public CGFscene
 public:
 	ANFScene(char *filename);
 
-	void initCameras();
-	void setCamera(Camera cam);
-
 	void initLights();
 
 	void init();
@@ -52,6 +50,13 @@ public:
 	void update(unsigned long t);
 
 	static TiXmlElement *findChildByAttribute(TiXmlElement *parent,const char * attr, const char *val);
+
+	int * getActiveCameraIndexPointer () { return &activeCameraIndex; }
+	void setActiveCameraIndex (int index) { activeCameraIndex = index;
+			activeCamera = scene_cameras[index]; 
+			CGFapplication::activeApp->forceRefresh();}
+
+	std::vector<Camera *> getCameras() { return scene_cameras; }
 
 	~ANFScene();
 
@@ -70,10 +75,12 @@ protected:
 	CGFlight* light0;
 	myUnitCube* cube;
 
-
 	bool failed;
 	std::vector<std::string> usedIDs;
 	std::stack<Appearence *> appearenceStack;
+
+	std::vector<Camera *> scene_cameras;
+	int activeCameraIndex;
 
 	void processGlobal ();
 	void processCameras ();
@@ -83,6 +90,8 @@ protected:
 	void processGraph ();
 
 	bool generateGraph ();
+	void generateMatrices (graphNode * node);
 	void navigateGraph (graphNode * node);
+	
 
 };

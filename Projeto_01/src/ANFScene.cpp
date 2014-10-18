@@ -85,7 +85,7 @@ ANFScene::ANFScene(char *filename)
 
 	processGlobal();
 	processCameras();
-	//processLights();
+	processLights();
 	processTextures();
 	processAppearences();
 	processGraph();
@@ -97,38 +97,9 @@ ANFScene::ANFScene(char *filename)
 		exit(1);
 	}
 
-	Vector3 v1 = Vector3(10,5,0);
-	Vector3 v2 = Vector3(1,2,3);
-
-	Vector3 v3 = v1 + v2;
-	Vector3 v4 = v3 * .5;
-
 	generateGraph();
+	generateMatrices(graph->getRoot());
 
-}
-
-void ANFScene::initCameras()
-{
-	std::vector<Camera*> camVec = cameras->getCameras();
-	for (unsigned int i = 0; i < camVec.size(); i++)
-	{
-		scene_cameras.push_back(camVec[i]);
-	}
-
-}
-
-
-void ANFScene::setCamera(Camera cam)
-{
-	std::vector<Camera*> camVec = cameras->getCameras();
-	for (unsigned int i = 0; i < camVec.size(); i++)
-	{
-		if (cam.getID() == cameras->getActiveID())
-		{
-			activateCamera(i);
-			break;
-		}
-	}
 }
 
 //-------------------------------------------------------
@@ -171,7 +142,7 @@ void ANFScene::init()
 
 
 	/* INIT CAMERA */
-	activeCamera = cameras->getActiveCamera();
+//	activeCamera = cameras->getActiveCamera();
 
 
 	/* ------------- */
@@ -202,8 +173,9 @@ void ANFScene::display()
 	// Apply transformations corresponding to the camera position relative to the origin
 	//CGFscene::activeCamera->applyView();
 
-	activeCamera = cameras->getActiveCamera();
+//	activeCamera = cameras->getActiveCamera();
 
+	activeCamera = scene_cameras[activeCameraIndex];
 	activeCamera->applyView();
 
 	// Draw axis
@@ -337,7 +309,6 @@ void ANFScene::processCameras ()
 	int cameraCount = 0;
 	for(TiXmlElement* camera = cameras->getElement()->FirstChildElement(); camera != NULL; camera = camera->NextSiblingElement())
 	{
-		cameraCount ++;
 
 		content = camera->Value();
 
@@ -359,6 +330,9 @@ void ANFScene::processCameras ()
 				std::cout << "\tID " << content << " is already in use\n";
 				failed = true;
 			}
+
+			if (content == cameras->getInitial())
+				activeCameraIndex = cameraCount;
 
 			if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
 				if (!cam->setNear(f))
@@ -391,8 +365,8 @@ void ANFScene::processCameras ()
 				if (!cam->setTarget(x,y,z))
 					failed = true;
 			}
-
-			cameras->addCamera(cam);
+			
+			scene_cameras.push_back(cam);
 		} else if (content == "ortho")
 		{
 			printf ("\tProcessing Orthogonal Camera\n");
@@ -410,6 +384,9 @@ void ANFScene::processCameras ()
 				std::cout << "\tID " << content << " is already in use\n";
 				failed = true;
 			}
+
+			if (content == cameras->getInitial())
+				activeCameraIndex = cameraCount;
 
 			if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
 				if (!cam->setNear(f))
@@ -439,19 +416,19 @@ void ANFScene::processCameras ()
 			if (!cam->setAxis(content.at(0)))
 				failed = true;
 
-			cameras->addCamera(cam);
+			scene_cameras.push_back(cam);
 		}
+		
+		cameraCount ++;
 	}
 
-
 	std::cout << "\tFound " << cameraCount << " camera(s)\n";
-
-	cameras->setActiveID(cameras->getInitial());
-
-	activeCamera = cameras->getActiveCamera();
-
-
-	initCameras();
+/*
+	for (unsigned int i = 0; i < camVec.size(); i++)
+	{
+		scene_cameras.push_back(camVec[i]);
+	}
+	*/
 }
 
 void ANFScene::processLights ()
@@ -798,7 +775,7 @@ void ANFScene::processGraph ()
 
 	printf ("Processing Graph\n");
 
-	content = std::string (graph->getElement()->Attribute ("root"));
+	content = std::string (graph->getElement()->Attribute ("rootid"));
 	graph->setRootID(content);
 
 	for(TiXmlElement* nodeEle = graph->getElement()->FirstChildElement(); nodeEle != NULL; nodeEle = nodeEle->NextSiblingElement())
@@ -806,6 +783,7 @@ void ANFScene::processGraph ()
 
 		content = std::string (nodeEle->Attribute ("id"));
 
+		std::cout << "Processing node " << content << endl;
 		graphNode * node = new graphNode ();
 		node->setElement(nodeEle);
 
@@ -888,154 +866,156 @@ void ANFScene::processGraph ()
 
 
 		/* Find all rectangles */
-		for (TiXmlElement * rectangle = PrimitiveEle->FirstChildElement( "rectangle" ); rectangle != NULL; rectangle = rectangle->NextSiblingElement("rectangle"))
+		if (PrimitiveEle != NULL)
 		{
-			valid = true;
-
-			Rectangle * rect = new Rectangle();
-
-			content = std::string ( rectangle->Attribute("xy1"));
-
-			const char * content_c = content.c_str();
-
-			if(!content_c || sscanf(content_c,"%f %f",&x, &y) != 2)
+			for (TiXmlElement * rectangle = PrimitiveEle->FirstChildElement( "rectangle" ); rectangle != NULL; rectangle = rectangle->NextSiblingElement("rectangle"))
 			{
-				std::cout << "Error parsing rectangle Point 1 in " << node->getID() << endl << endl;
+				valid = true;
+
+				Rectangle * rect = new Rectangle();
+
+				content = std::string ( rectangle->Attribute("xy1"));
+
+				const char * content_c = content.c_str();
+
+				if(!content_c || sscanf(content_c,"%f %f",&x, &y) != 2)
+				{
+					std::cout << "Error parsing rectangle Point 1 in " << node->getID() << endl << endl;
+				}
+
+				rect->setX1 (x);
+				rect->setY1 (y);
+
+				content = std::string ( rectangle->Attribute("xy2"));
+
+				content_c = content.c_str();
+
+				if(!content_c || sscanf(content_c,"%f %f",&x, &y) != 2)
+				{
+					std::cout << "Error parsing rectangle Point 2 in " << node->getID() << endl << endl;
+				}
+
+				rect->setX2 (x);
+				rect->setY2 (y);
+
+				rect->calculateVertex();
+				node->addPrimitive(rect);
 			}
 
-			rect->setX1 (x);
-			rect->setY1 (y);
-
-			content = std::string ( rectangle->Attribute("xy2"));
-
-			content_c = content.c_str();
-
-			if(!content_c || sscanf(content_c,"%f %f",&x, &y) != 2)
+			/* Find all triangles */
+			for (TiXmlElement * triangle = PrimitiveEle->FirstChildElement( "triangle" ); triangle != NULL; triangle = triangle->NextSiblingElement("triangle"))
 			{
-				std::cout << "Error parsing rectangle Point 2 in " << node->getID() << endl << endl;
+				valid = true;
+
+				Triangle * tri = new Triangle();
+
+				content = std::string ( triangle->Attribute("xyz1"));
+
+				const char * content_c = content.c_str();
+
+				if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
+				{
+					std::cout << "Error parsing triangle Point 1 in " << node->getID() << endl << endl;
+				}
+
+				tri->setV1(Vector3(x,y,z));
+
+				content = std::string ( triangle->Attribute("xyz2"));
+
+				content_c = content.c_str();
+
+				if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
+				{
+					std::cout << "Error parsing triangle Point 2 in " << node->getID() << endl << endl;
+				}
+
+				tri->setV2(Vector3(x,y,z));
+
+				content = std::string ( triangle->Attribute("xyz3"));
+
+				content_c = content.c_str();
+
+				if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
+				{
+					std::cout << "Error parsing triangle Point 3 in " << node->getID() << endl << endl;
+				}
+
+				tri->setV3(Vector3(x,y,z));
+
+				tri->updateNormal();
+				tri->calculateSizes();
+
+				node->addPrimitive(tri);
 			}
 
-			rect->setX2 (x);
-			rect->setY2 (y);
-
-			rect->calculateVertex();
-			node->addPrimitive(rect);
-		}
-
-		/* Find all triangles */
-		for (TiXmlElement * triangle = PrimitiveEle->FirstChildElement( "triangle" ); triangle != NULL; triangle = triangle->NextSiblingElement("triangle"))
-		{
-			valid = true;
-
-			Triangle * tri = new Triangle();
-
-			content = std::string ( triangle->Attribute("xyz1"));
-
-			const char * content_c = content.c_str();
-
-			if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
+			/* Find all cylinders */
+			for (TiXmlElement * cylinder = PrimitiveEle->FirstChildElement( "cylinder" ); cylinder != NULL; cylinder = cylinder->NextSiblingElement("cylinder"))
 			{
-				std::cout << "Error parsing triangle Point 1 in " << node->getID() << endl << endl;
+				valid = true;
+
+				Cylinder * cyl = new Cylinder();
+
+				if (cylinder->QueryFloatAttribute("base",&f)==TIXML_SUCCESS)
+					cyl->setBase(f);
+
+				if (cylinder->QueryFloatAttribute("top",&f)==TIXML_SUCCESS)
+					cyl->setTop(f);
+
+				if (cylinder->QueryFloatAttribute("height",&f)==TIXML_SUCCESS)
+					cyl->setHeight(f);
+
+				if (cylinder->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
+					cyl->setSlices(s);
+
+				if (cylinder->QueryIntAttribute("stacks",&s)==TIXML_SUCCESS)
+					cyl->setStacks(s);
+
+				node->addPrimitive(cyl);
 			}
 
-			tri->setV1(Vector3(x,y,z));
-
-			content = std::string ( triangle->Attribute("xyz2"));
-
-			content_c = content.c_str();
-
-			if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
+			/* Find all cylinders */
+			for (TiXmlElement * sphere = PrimitiveEle->FirstChildElement( "sphere" ); sphere != NULL; sphere = sphere->NextSiblingElement("sphere"))
 			{
-				std::cout << "Error parsing triangle Point 2 in " << node->getID() << endl << endl;
+				valid = true;
+
+				Sphere * sph = new Sphere();
+
+				if (sphere->QueryFloatAttribute("radius",&f)==TIXML_SUCCESS)
+					sph->setRadius(f);
+
+				if (sphere->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
+					sph->setSlices(s);
+
+				if (sphere->QueryIntAttribute("stacks",&s)==TIXML_SUCCESS)
+					sph->setStacks(s);
+
+				node->addPrimitive(sph);
 			}
 
-			tri->setV2(Vector3(x,y,z));
-
-			content = std::string ( triangle->Attribute("xyz3"));
-
-			content_c = content.c_str();
-
-			if(!content_c || sscanf(content_c,"%f %f %f",&x, &y, &z) != 3)
+			/* Find all torus */
+			for (TiXmlElement * torus = PrimitiveEle->FirstChildElement( "torus" ); torus != NULL; torus = torus->NextSiblingElement("torus"))
 			{
-				std::cout << "Error parsing triangle Point 3 in " << node->getID() << endl << endl;
+				valid = true;
+
+				Torus * tor = new Torus();
+
+				if (torus->QueryFloatAttribute("inner",&f)==TIXML_SUCCESS)
+					tor->setInner(f);
+
+				if (torus->QueryFloatAttribute("outer",&f)==TIXML_SUCCESS)
+					tor->setOuter(f);
+
+				if (torus->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
+					tor->setSlices(s);
+
+				if (torus->QueryIntAttribute("loops",&s)==TIXML_SUCCESS)
+					tor->setLoops(s);
+
+				tor->generateVertices();
+
+				node->addPrimitive(tor);
 			}
-
-			tri->setV3(Vector3(x,y,z));
-
-			tri->updateNormal();
-			tri->calculateSizes();
-
-			node->addPrimitive(tri);
 		}
-
-		/* Find all cylinders */
-		for (TiXmlElement * cylinder = PrimitiveEle->FirstChildElement( "cylinder" ); cylinder != NULL; cylinder = cylinder->NextSiblingElement("cylinder"))
-		{
-			valid = true;
-
-			Cylinder * cyl = new Cylinder();
-			
-			if (cylinder->QueryFloatAttribute("base",&f)==TIXML_SUCCESS)
-				cyl->setBase(f);
-
-			if (cylinder->QueryFloatAttribute("top",&f)==TIXML_SUCCESS)
-				cyl->setTop(f);
-
-			if (cylinder->QueryFloatAttribute("height",&f)==TIXML_SUCCESS)
-				cyl->setHeight(f);
-			
-			if (cylinder->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
-				cyl->setSlices(s);
-
-			if (cylinder->QueryIntAttribute("stacks",&s)==TIXML_SUCCESS)
-				cyl->setStacks(s);
-
-			node->addPrimitive(cyl);
-		}
-
-		/* Find all cylinders */
-		for (TiXmlElement * sphere = PrimitiveEle->FirstChildElement( "sphere" ); sphere != NULL; sphere = sphere->NextSiblingElement("sphere"))
-		{
-			valid = true;
-
-			Sphere * sph = new Sphere();
-			
-			if (sphere->QueryFloatAttribute("radius",&f)==TIXML_SUCCESS)
-				sph->setRadius(f);
-
-			if (sphere->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
-				sph->setSlices(s);
-
-			if (sphere->QueryIntAttribute("stacks",&s)==TIXML_SUCCESS)
-				sph->setStacks(s);
-
-			node->addPrimitive(sph);
-		}
-
-		/* Find all torus */
-		for (TiXmlElement * torus = PrimitiveEle->FirstChildElement( "torus" ); torus != NULL; torus = torus->NextSiblingElement("torus"))
-		{
-			valid = true;
-
-			Torus * tor = new Torus();
-			
-			if (torus->QueryFloatAttribute("inner",&f)==TIXML_SUCCESS)
-				tor->setInner(f);
-
-			if (torus->QueryFloatAttribute("outer",&f)==TIXML_SUCCESS)
-				tor->setOuter(f);
-
-			if (torus->QueryIntAttribute("slices",&s)==TIXML_SUCCESS)
-				tor->setSlices(s);
-
-			if (torus->QueryIntAttribute("loops",&s)==TIXML_SUCCESS)
-				tor->setLoops(s);
-
-			tor->generateVertices();
-
-			node->addPrimitive(tor);
-		}
-
 		/* Process Descendants */
 
 		TiXmlElement * descendants = nodeEle->FirstChildElement("descendants");
@@ -1084,6 +1064,26 @@ bool ANFScene::generateGraph ()
 	return true;
 }
 
+void ANFScene::generateMatrices (graphNode * node)
+{
+	glLoadIdentity();
+	node->applyTransforms();
+
+	std::vector <graphNode *> descendants = node->getDescendants();
+
+	glGetFloatv(GL_MODELVIEW_MATRIX, node->matrix);
+
+	for (unsigned int desc = 0; desc < descendants.size(); desc++)
+	{
+		graphNode * descNode = descendants[desc];
+		if (! descNode->getVisited())
+		{
+			// Recursive call
+			generateMatrices (descendants[desc]);
+		}
+	}
+}
+
 void ANFScene::navigateGraph (graphNode * node)
 {
 	Appearence * actualAppearence = node->getAppearence();
@@ -1097,7 +1097,8 @@ void ANFScene::navigateGraph (graphNode * node)
 	// Process node
 	glPushMatrix();
 
-	node->applyTransforms();
+	glMultMatrixf(node->matrix);
+
 	appearenceStack.top()->apply();
 
 	Texture * tex = appearenceStack.top()->getTexture();

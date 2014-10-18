@@ -11,6 +11,7 @@
 
 #include "XMLScene.h"
 #include "ANFScene.h"
+#include "ANFInterface.h"
 
 using std::cout;
 using std::exception;
@@ -27,12 +28,16 @@ int main(int argc, char* argv[]) {
 		//XMLScene scene = XMLScene (argv[1]);
 		//ANFScene scene2 = ANFScene (argv[1]);
 
-		app.setScene(new ANFScene(argv[1]));
+		ANFScene * scene = new ANFScene(argv[1]);
 
+		ANFInterface * inter = new ANFInterface();
+
+		app.setScene(scene);
+		inter->setScene(scene);
 		/*
 		app.setScene(new DemoScene());
 		*/
-		app.setInterface(new CGFinterface());
+		app.setInterface(inter);
 		
 		app.run();
 	}
