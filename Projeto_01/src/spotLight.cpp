@@ -70,6 +70,7 @@ void spotLight::setPosition(float * p)
 		position[i] = p[i];
 		direction[i] = target[i] - position[i];
 	}
+	light::setPosition(p);
 }
 
 void spotLight::setTarget(float * t)

@@ -23,7 +23,7 @@ public:
 	bool setAmbient(Color col);
 	bool setDiffuse(Color col);
 	bool setSpecular(Color col);
-	bool setPosition(float a, float b, float c);
+	bool setPosition(float * p);
 	bool isEnabled();
 	bool isMarkerEnabled() {return marker; }
 	bool enableMarker();

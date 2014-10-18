@@ -14,7 +14,13 @@ bool light::setDiffuse(Color col) {diffuse = col; return true; }
 
 bool light::setSpecular(Color col) {specular = col; return true; }
 
-bool light::setPosition(float a, float b, float c) {pos = Vector3(a,b,c); return true;}
+bool light::setPosition(float * p)
+{
+	p[4] = 1.0;
+	pos = Vector3(p[0], p[1], p[2]);
+	glLightf(GL_LIGHT0 + id, GL_POSITION, p[0]);
+	return true;
+}
 
 bool light::isEnabled() {return enabled; }
 
