@@ -1,0 +1,467 @@
+<anf>
+
+	<globals>
+		<!-- Valores para mode: "fill" , "line", "point" -->
+		<!-- Valores para shading: "flat", "gouraud" ) -->
+		<drawing mode="fill" shading="gouraud" background=".1 .6 .1 1.0" />
+		
+		<!-- Valores para cullface: "none", "back" , "front" ou "both" -->
+		<!-- Valores para cullorder : "ccw" ou "cw" -->
+		<culling face="none" order="ccw" />
+
+		<lighting doublesided="true" local="true" enabled="true" ambient="0.4 0.4 0.4 1.0" />
+
+	</globals>
+
+	<cameras initial="PerspectiveCamera_01" >
+		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="90" pos="6.0 1.5 6.0" target="0.0 1.5 0.0" />
+		<ortho id="Ortho_X" direction="x" near="-10.0" far="100.0" left="0.0" right="10.0" top="10.0" bottom="-1.0" />
+		<ortho id="Ortho_Z" direction="z" near="-10.0" far="100.0" left="0.0" right="10.0" top="10.0" bottom="-1.0" />
+
+	</cameras>
+
+	<lights>
+		<light id="Light1" type="omni" enabled="true" marker="true" pos="6.0 2.0 2.0" >
+			<component type="ambient" value="0.5 0.5 0.5 1.0" />
+			<component type="diffuse" value="0.5 0.5 0.5 1.0" />
+			<component type="specular" value="0.5 0.5 0.5 1.0" />
+		</light>
+	</lights>
+
+	<textures>
+		<texture id="sidewalk_tex" file="sidewalk.jpg" texlength_t="1.6" texlength_s="1.36"/>
+		<texture id="asphalt_tex" file="asphalt.jpg" texlength_t="1" texlength_s="1"/>
+		<texture id="house_tex" file="house.jpg" texlength_t="2.72" texlength_s="3"/>
+		<texture id="roof_tex" file="roof.jpg" texlength_t="1.136" texlength_s="1.28"/>
+		<texture id="metal_tex" file="metal.jpg" texlength_t="1" texlength_s="1"/>
+		<texture id="skyline_tex" file="skyline.jpg" texlength_t="361" texlength_s="1024"/>
+	</textures>
+
+	<appearances>
+		<appearance id="sidewalk_app" shininess="0.5" textureref="sidewalk_tex">
+			<component type="ambient" value="0.44 0.75 0.27 1.0" />
+			<component type="diffuse" value="0.44 0.75 0.27 1.0" />
+			<component type="specular" value="0.44 0.75 0.27 1.0" />
+		</appearance>
+		<appearance id="asphalt_app" shininess="0.5" textureref="asphalt_tex">
+			<component type="ambient" value="0.44 0.75 0.27 1.0" />
+			<component type="diffuse" value="0.44 0.75 0.27 1.0" />
+			<component type="specular" value="0.44 0.75 0.27 1.0" />
+		</appearance>
+		<appearance id="house_app" shininess="0.5" textureref="house_tex">
+			<component type="ambient" value="0.44 0.75 0.27 1.0" />
+			<component type="diffuse" value="0.44 0.75 0.27 1.0" />
+			<component type="specular" value="0.44 0.75 0.27 1.0" />
+		</appearance>
+		<appearance id="roof_app" shininess="0.5" textureref="roof_tex">
+			<component type="ambient" value="0.44 0.75 0.27 1.0" />
+			<component type="diffuse" value="0.44 0.75 0.27 1.0" />
+			<component type="specular" value="0.44 0.75 0.27 1.0" />
+		</appearance>
+		<appearance id="metal_app" shininess="0.5" textureref="metal_tex">
+			<component type="ambient" value="0.44 0.75 0.27 1.0" />
+			<component type="diffuse" value="0.44 0.75 0.27 1.0" />
+			<component type="specular" value="0.44 0.75 0.27 1.0" />
+		</appearance>
+		<appearance id="skyline_app" shininess="0.5" textureref="skyline_tex">
+			<component type="ambient" value="0.44 0.75 0.27 1.0" />
+			<component type="diffuse" value="0.44 0.75 0.27 1.0" />
+			<component type="specular" value="0.44 0.75 0.27 1.0" />
+		</appearance>
+		<appearance id="grey" shininess="0.5" >
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="0.2 0.2 0.2 1.0" />
+			<component type="specular" value="0.2 0.2 0.2 1.0" />
+		</appearance>
+		<appearance id="red" shininess="0.5" >
+			<component type="ambient" value="1 0.2 0.2 1.0" />
+			<component type="diffuse" value="1 0.2 0.2 1.0" />
+			<component type="specular" value="1 0.2 0.2 1.0" />
+		</appearance>
+		<appearance id="green" shininess="0.5" >
+			<component type="ambient" value="0.2 1 0.2 1.0" />
+			<component type="diffuse" value="0.2 1 0.2 1.0" />
+			<component type="specular" value="0.2 1 0.2 1.0" />
+		</appearance>
+		<appearance id="blue" shininess="0.5" >
+			<component type="ambient" value="0.2 0.2 1 1.0" />
+			<component type="diffuse" value="0.2 0.2 1 1.0" />
+			<component type="specular" value="0.2 0.2 1 1.0" />
+		</appearance>
+	</appearances>
+
+	<graph rootid="graphRoot">
+		<node id="graphRoot">
+			<transforms>
+			</transforms>
+			
+			<appearanceref id="grey" />
+			
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="sidewalk_1" />
+				<noderef id="sidewalk_2" />
+				<noderef id="road" />
+				<noderef id="house_1" />
+				<noderef id="house_2" />
+				<noderef id="lamps" />
+				<noderef id="flag_group_1"/>
+				<noderef id="flag_group_2"/>
+				<noderef id="skyline_node"/>
+
+			</descendants>
+		</node>
+
+		<node id="skyline_node">
+			<transforms>
+				<transform type="scale" factor=".15 .15 .15" />
+				<transform type="rotate" axis="y" angle="45" />
+			</transforms>
+			
+			<appearanceref id="skyline_app" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="1024 361" />
+			</primitives>
+
+		</node>
+
+		<node id="flag_group_1">
+			<transforms>
+
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="flag_1" />
+				<noderef id="flag_2" />
+				<noderef id="flag_3" />
+			</descendants>
+		</node>
+
+		<node id="flag_group_2">
+			<transforms>
+				<transform type="translate" to="0 0 3" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="flag_1" />
+				<noderef id="flag_2" />
+				<noderef id="flag_3" />
+			</descendants>
+		</node>
+
+		<node id="flag_1">
+			<transforms>
+				<transform type="translate" to="1.8 2 2.8" />
+				<transform type="rotate" axis="y" angle="90" />
+				<transform type="scale" factor=".6 .6 .6" />
+			</transforms>
+
+			<appearanceref id="red" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="flag_primitive" />
+			</descendants>
+
+		</node>
+
+		<node id="flag_2">
+			<transforms>
+				<transform type="translate" to="1.8 2 3.6" />
+				<transform type="rotate" axis="y" angle="90" />
+				<transform type="scale" factor=".6 .6 .6" />
+			</transforms>
+
+			<appearanceref id="green" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="flag_primitive" />
+			</descendants>
+
+		</node>
+
+		<node id="flag_3">
+			<transforms>
+				<transform type="translate" to="1.8 2 4.4" />
+				<transform type="rotate" axis="y" angle="90" />
+				<transform type="scale" factor=".6 .6 .6" />
+			</transforms>
+
+			<appearanceref id="blue" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="flag_primitive" />
+			</descendants>
+
+		</node>
+
+		<node id="flag_primitive">
+			<transforms>
+
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<triangle xyz1="0 0 0" xyz2=".5 -.5 0" xyz3="1 0 0" />
+			</primitives>
+
+			<descendants>
+			</descendants>
+		</node>
+
+		<node id="lamps">
+			<transforms>
+			</transforms>
+
+			<appearanceref id="metal_ap" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="lamp_1" />
+				<noderef id="lamp_2" />
+				<noderef id="lamp_3" />
+			</descendants>
+		</node>
+
+		<node id="lamp_1">
+			<transforms>
+				<transform type="translate" to="1.8 0 1.8" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="lamp_post_primitive" />
+			</descendants>
+		</node>
+
+		<node id="lamp_2">
+			<transforms>
+				<transform type="translate" to="4.8 0 1.8" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="lamp_post_primitive" />
+			</descendants>
+		</node>
+
+		<node id="lamp_3">
+			<transforms>
+				<transform type="translate" to="1.8 0 4.8" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="lamp_post_primitive" />
+			</descendants>
+		</node>
+
+		<node id="lamp_post_primitive">
+			<transforms>
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<cylinder base=".1" top=".07" height="2.5" slices="16" stacks="10" />
+			</primitives>
+
+			<descendants>
+				<noderef id="lamp_post_light" />
+				<noderef id="lamp_post_torus" />
+			</descendants>
+		</node>
+
+		<node id="lamp_post_light">
+			<transforms>
+				<transform type="translate" to="0 0 2.5" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<sphere radius=".2" slices="16" stacks="16" />
+			</primitives>
+		</node>
+
+		<node id="lamp_post_torus">
+			<transforms>
+				<transform type="translate" to="0 0 2" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<torus inner=".2" outer=".1" slices="32" loops="32" />
+			</primitives>
+		</node>
+
+		<node id="house_1">
+			<transforms>
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="house_primitive" />
+			</descendants>
+		</node>
+
+		<node id="house_2">
+			<transforms>
+				<transform type="translate" to="0 0 10" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="house_primitive" />
+			</descendants>
+		</node>
+
+		<node id="house_primitive">
+			<transforms>
+			</transforms>
+
+			<appearanceref id="house_app" />
+
+			<primitives>
+				<rectangle xy1="0 0" xy2="10 3" />
+			</primitives>
+
+			<descendants>
+				<noderef id="roof" />
+			</descendants>
+		</node>
+
+		<node id="roof">
+			<transforms>
+				<transform type="translate" to="0 3 0" />
+				<transform type="rotate" axis="x" angle="-70" />
+			</transforms>
+			
+			<appearanceref id="roof_app" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="10 4" />
+			</primitives>
+
+			<descendants>
+			</descendants>
+		</node>
+
+		<node id="road">
+			<transforms>
+				<transform type="translate" to="0 -0.2 10" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="asphalt_app" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="10 10" />
+			</primitives>
+
+			<descendants>
+			</descendants>
+		</node>
+
+		<node id="sidewalk_1">
+			<transforms>
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="sidewalk_primitive" />
+			</descendants>
+		</node>
+
+		<node id="sidewalk_2">
+			<transforms>
+				<transform type="translate" to="12 0 0" />
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>
+				<noderef id="sidewalk_primitive" />
+			</descendants>
+		</node>
+
+		<node id="sidewalk_primitive">
+			<transforms>
+				<transform type="rotate" axis="y" angle="-90" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="sidewalk_app" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="10 2" />
+			</primitives>
+
+			<descendants>
+				<noderef id="sidewalk_top" />
+			</descendants>
+		</node>
+
+		<node id="sidewalk_top">
+			<transforms>
+				<transform type="translate" to="0 2 0" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="sidewalk_app" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="10 .5" />
+			</primitives>
+		</node>
+	</graph>
+</anf>

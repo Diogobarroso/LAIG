@@ -38,6 +38,12 @@ ANFScene::ANFScene(char *filename)
 
 	/* -------------------------------- */
 
+	defaultAppearence = new Appearence();
+	defaultAppearence->setDiffuse(new Color(0.8f,0.0f,0.4f,1));
+	defaultAppearence->setAmbient(new Color(0.8f,0.0f,0.4f,1));
+	defaultAppearence->setSpecular(new Color(0.8f,0.0f,0.4f,1));
+	defaultAppearence->generateAppearence();
+
 	/* Block of ANF Elements */
 	global = new globalElement();
 	if (!global->setElement (anfElement -> FirstChildElement ( "globals" )))
@@ -155,9 +161,7 @@ void ANFScene::init()
 		lights.getLight(i)->setKq(0.0);
 		scene_lights.push_back(lights.getLight(i));
 	}
-	//light0->enable();
 
-	cube = new myUnitCube();
 }
 
 void ANFScene::display()
@@ -173,8 +177,6 @@ void ANFScene::display()
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	//CGFscene::activeCamera->applyView();
-
-//	activeCamera = cameras->getActiveCamera();
 
 	activeCamera = scene_cameras[activeCameraIndex];
 	activeCamera->applyView();
@@ -857,7 +859,7 @@ void ANFScene::processGraph ()
 			node->setAppearence(app);
 		} else if (content != "inherit") {
 			std::cout << "\tError\n\tAppearence id = " << content << " does not exist in " << node->getID() << endl << endl;
-			failed = true;
+			node->setAppearence(defaultAppearence);
 		} else {
 			node->setAppearence(NULL);
 		}		

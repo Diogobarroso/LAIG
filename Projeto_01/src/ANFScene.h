@@ -70,9 +70,7 @@ protected:
 	graphElement * graph;
 	lightElement lights;
 	
-	/* Testing */
-
-	myUnitCube* cube;
+	Appearence * defaultAppearence;
 
 	bool failed;
 	std::vector<std::string> usedIDs;
