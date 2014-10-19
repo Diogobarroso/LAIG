@@ -81,3 +81,8 @@ void spotLight::setTarget(float * t)
 		direction[i] = target[i] - position[i];
 	}
 }
+
+void spotLight::setName(string n)
+{
+	name = n;
+}

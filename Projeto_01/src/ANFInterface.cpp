@@ -30,6 +30,25 @@ void ANFInterface::initGUI()
 	addRadioButtonToGroup(drawGroup, "Line");
 	addRadioButtonToGroup(drawGroup, "Point");
 
+	addColumn();
+
+	GLUI_Panel *lightPanel = addPanel("Lights", 1);
+	for(unsigned int i=0;i<anfscene->getLights().size();i++)
+	{
+		string str=anfscene->getLight(i)->getName();
+		char * writable = new char[str.size() + 1];
+		copy(str.begin(), str.end(), writable);
+		writable[str.size()] = '\0';
+		if((*anfscene->getLight(i)->isEnabled())== 1){
+			addCheckboxToPanel(lightPanel,writable,NULL,i)->set_int_val(1);
+		}
+		else{
+			addCheckboxToPanel(lightPanel,writable,NULL,i)->set_int_val(0);
+		}
+		delete[] writable;
+	}
+
+
 }
 
 void ANFInterface::processGUI(GLUI_Control *ctrl)

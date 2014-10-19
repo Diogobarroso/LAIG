@@ -61,6 +61,10 @@ public:
 
 
 	std::vector<Camera *> getCameras() { return scene_cameras; }
+	std::vector<light *> getLights() {return scene_lights; }
+	light * getLight(int i) {return scene_lights[i]; }
+
+	vector<light * > scene_lights;
 
 	~ANFScene();
 
@@ -72,7 +76,7 @@ protected:
 	textureElement * textures;
 	appearenceElement * appearences;
 	graphElement * graph;
-	lightElement lights;
+	lightElement * lights;
 	
 	Appearence * defaultAppearence;
 

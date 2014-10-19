@@ -22,7 +22,12 @@ bool light::setPosition(float * p)
 	return true;
 }
 
-bool light::isEnabled() {return enabled; }
+int * light::isEnabled()
+{
+	int tmp;
+	enabled? tmp = 1 : tmp = 0;
+	return &tmp;
+}
 
 bool light::enableMarker() {marker = true; return true; }
 

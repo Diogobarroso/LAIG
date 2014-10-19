@@ -57,8 +57,8 @@ ANFScene::ANFScene(char *filename)
 		return;
 	}
 
-	lights = lightElement();
-	lights.setElement (anfElement -> FirstChildElement ( "lights" ));
+	lights = new lightElement();
+	lights->setElement (anfElement -> FirstChildElement ( "lights" ));
 
 	textures = new textureElement();
 	if(!textures->setElement (anfElement -> FirstChildElement ( "textures" )))
@@ -150,12 +150,12 @@ void ANFScene::init()
 
 	/* ------------- */
 
-	for(unsigned int i = 0; i < lights.getLightSet().size(); i++)
+	for(unsigned int i = 0; i < lights->getLightSet().size(); i++)
 	{
-		lights.getLight(i)->setKc(0.0);
-		lights.getLight(i)->setKl(0.2);
-		lights.getLight(i)->setKq(0.0);
-		scene_lights.push_back(lights.getLight(i));
+		lights->getLight(i)->setKc(0.0);
+		lights->getLight(i)->setKl(0.2);
+		lights->getLight(i)->setKq(0.0);
+		scene_lights.push_back(lights->getLight(i));
 	}
 
 }
@@ -188,8 +188,8 @@ void ANFScene::display()
 	glPolygonMode(GL_FRONT_AND_BACK, global->getDrawMode());
 
 	//light0->draw();
-	for(int i = 0; i < lights.getLightSet().size(); i++)
-		lights.getLight(i)->draw();
+	for(int i = 0; i < lights->getLightSet().size(); i++)
+		lights->getLight(i)->draw();
 
 	navigateGraph(graph->getRoot());
 
@@ -444,12 +444,12 @@ void ANFScene::processLights ()
 	int lightCounter = 0;
 	float position[4];
 
-	if(lights.getElement() == NULL)
+	if(lights->getElement() == NULL)
 		printf("Lights Element not found\n");
 	else
 	{
 		printf("Processing Lights\n");
-		TiXmlElement * lightIt = lights.getElement()->FirstChildElement("light");
+		TiXmlElement * lightIt = lights->getElement()->FirstChildElement("light");
 
 		for(; lightIt != NULL; lightIt = lightIt->NextSiblingElement( "light" ))
 		{
@@ -473,11 +473,12 @@ void ANFScene::processLights ()
 						position[0] = x;
 						position[1] = y;
 						position[2] = z;
+						position[3] = 0.0;
 
 						omniLight * omni = new omniLight(GL_LIGHT0 + lightCounter - 1, position , NULL);
 
-						//content = std::string(lightIt->Attribute( "id" ));
-						//omni->setId(content);
+						content = std::string(lightIt->Attribute( "id" ));
+						omni->setName(content);
 
 						content = std::string(lightIt->Attribute( "enabled" ));
 						content == "true"? omni->enable() : omni->disable();
@@ -521,7 +522,7 @@ void ANFScene::processLights ()
 									failed = true;
 						}
 
-						lights.addLight(omni);
+						lights->addLight(omni);
 					}
 				}
 				else if(content == "spot")
@@ -532,26 +533,30 @@ void ANFScene::processLights ()
 						failed = true;
 					else
 					{
-						printf("1\n");
 						position[0] = x;
 						position[1] = y;
 						position[2] = z;
 
 						content = std::string(lightIt->Attribute( "target" ));
-						float target[4];
+						float target[3];
 						float tmp[5];
 						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
+						{
 							failed = true;
+						}
 						else
 						{
 							target[0] = x;
 							target[1] = y;
 							target[2] = z;
-							target[3] = 1.0;
-							spotLight * spot = new spotLight(GL_LIGHT0 + lightCounter - 1, position , target);
+							tmp[0] = target[0] - position[0];
+							tmp[1] = target[1] - position[1];
+							tmp[2] = target[2] - position[2];
+							position[3] = 1.0;
+							spotLight * spot = new spotLight(GL_LIGHT0 + lightCounter - 1, position , tmp);
 
-							//content = std::string(lightIt->Attribute( "id" ));
-							//spot->setId(content);
+							content = std::string(lightIt->Attribute( "id" ));
+							spot->setName(content);
 
 							content = std::string(lightIt->Attribute( "enabled" ));
 							content == "true"? spot->enable() : spot->disable();
@@ -569,9 +574,11 @@ void ANFScene::processLights ()
 								spot->setPosition(tmp);
 							}
 							
+							content = std::string(lightIt->Attribute( "target" ));
+
 							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
 							{
-								tmp[3] = 0.0;
+								printf("Setting the target, it is: %f %f %f\n", tmp[0], tmp[1], tmp[2]);
 								spot->setTarget(tmp);
 							}
 
@@ -617,7 +624,7 @@ void ANFScene::processLights ()
 								}
 
 								glEnable(GL_LIGHT0 + lightCounter - 1);
-								lights.addLight(spot);
+								lights->addLight(spot);
 							}
 						}
 					}
@@ -628,6 +635,7 @@ void ANFScene::processLights ()
 		printf("Parsed %u lights\n", lightCounter);
 	}
 }
+
 
 void ANFScene::processTextures ()
 {

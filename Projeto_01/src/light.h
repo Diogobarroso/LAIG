@@ -16,7 +16,7 @@ protected:
 	Vector3 pos;
 public:
 	light(unsigned int lightid, float* pos, float *dir=NULL);
-	std::string getId();
+	int getId() {return id; }
 	bool enable();
 	bool disable();
 	bool setId(int id);
@@ -24,7 +24,7 @@ public:
 	bool setDiffuse(Color col);
 	bool setSpecular(Color col);
 	bool setPosition(float * p);
-	bool isEnabled();
+	int * isEnabled();
 	bool isMarkerEnabled() {return marker; }
 	bool enableMarker();
 	bool disableMarker();
@@ -32,6 +32,7 @@ public:
 	Color getDiffuse();
 	Color getSpecular();
 	Vector3 getPosition();
+	virtual string getName() { return "";}
 
 	virtual Vector3 * getTarget() {return NULL;};
 	virtual float * getExponent() {return NULL;};
