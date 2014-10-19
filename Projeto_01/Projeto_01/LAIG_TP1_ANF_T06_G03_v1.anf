@@ -13,7 +13,7 @@
 
 	</globals>
 
-	<cameras initial="Ortho_X" >
+	<cameras initial="PerspectiveCamera_01" >
 		<perspective id="PerspectiveCamera_01" near="1.0" far="999.0" angle="90" pos="6.0 1.5 6.0" target="0.0 1.5 0.0" />
 		<ortho id="Ortho_X" direction="x" near="-10.0" far="100.0" left="0.0" right="10.0" top="10.0" bottom="-1.0" />
 		<ortho id="Ortho_Z" direction="z" near="-10.0" far="100.0" left="0.0" right="10.0" top="10.0" bottom="-1.0" />

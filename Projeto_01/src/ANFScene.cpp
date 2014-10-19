@@ -334,7 +334,9 @@ void ANFScene::processCameras ()
 			}
 
 			if (content == cameras->getInitial())
+			{
 				activeCameraIndex = cameraCount;
+			}
 
 			if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
 				if (!cam->setNear(f))
@@ -388,7 +390,9 @@ void ANFScene::processCameras ()
 			}
 
 			if (content == cameras->getInitial())
+			{
 				activeCameraIndex = cameraCount;
+			}
 
 			if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
 				if (!cam->setNear(f))
@@ -425,12 +429,8 @@ void ANFScene::processCameras ()
 	}
 
 	std::cout << "\tFound " << cameraCount << " camera(s)\n";
-/*
-	for (unsigned int i = 0; i < camVec.size(); i++)
-	{
-		scene_cameras.push_back(camVec[i]);
-	}
-	*/
+
+	setActiveCameraIndex(activeCameraIndex);
 }
 
 void ANFScene::processLights ()
