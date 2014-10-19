@@ -56,6 +56,10 @@ public:
 			activeCamera = scene_cameras[index]; 
 			CGFapplication::activeApp->forceRefresh();}
 
+	int * getActiveDrawModePointer () { return &activeDrawMode; }
+	void setActiveDrawMode (int index);
+
+
 	std::vector<Camera *> getCameras() { return scene_cameras; }
 
 	~ANFScene();
@@ -78,6 +82,7 @@ protected:
 
 	std::vector<Camera *> scene_cameras;
 	int activeCameraIndex;
+	int activeDrawMode;
 
 	void processGlobal ();
 	void processCameras ();

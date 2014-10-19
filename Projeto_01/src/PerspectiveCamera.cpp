@@ -30,6 +30,8 @@ void PerspectiveCamera::updateProjectionMatrix(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(angle, aspect, near, far);
+	
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void PerspectiveCamera::applyView()

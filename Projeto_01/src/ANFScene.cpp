@@ -2,10 +2,6 @@
 
 #include "ANFScene.h"
 
-// Vector3s for two lights
-
-
-
 ANFScene::ANFScene(char *filename)
 {
 
@@ -170,6 +166,7 @@ void ANFScene::display()
 
 	// Clear image and depth buffer everytime we update the scene
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glClearColor(global->getDrawBackground().getRed(),global->getDrawBackground().getGreen(), global->getDrawBackground().getBlue(), global->getDrawBackground().getAlpha());
 
 	// Initialize Model-View matrix as identity (no transformation
 	glMatrixMode(GL_MODELVIEW);
@@ -1134,6 +1131,22 @@ void ANFScene::navigateGraph (graphNode * node)
 	}
 	glPopMatrix();
 	node->setVisited(false);
+}
+
+void ANFScene::setActiveDrawMode (int index)
+{
+	switch (index)
+	{
+	case 0:
+		global->setDrawMode("fill");
+		break;
+	case 1:
+		global->setDrawMode("line");
+		break;
+	case 2:
+		global->setDrawMode("point");
+		break;
+	}
 }
 
 ANFScene::~ANFScene()

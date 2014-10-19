@@ -1,0 +1,354 @@
+<anf>
+
+	<!-- bloco de configuracoes globais -->
+	<!-- a declaracao dos componentes deste bloco e' obrigatoria --> 
+	<globals>
+		<!-- Parametros de desenho -->
+		<!-- Valores para mode: "fill" , "line", "point" -->
+		<!-- Valores para shading: "flat", "gouraud" ) -->
+		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
+ 
+		<!-- Parametros de culling -->
+		<!-- Valores para cullface: "none", "back" , "front" ou "both" -->
+		<!-- Valores para cullorder : "ccw" ou "cw" -->
+		<culling face="back" order="ccw" />b
+ 
+		<!-- Parametros de iluminacao; seguem os parametros do OpenGL  -->
+		<lighting doublesided="true" local="true" enabled="true" ambient="1 1 1 0.3" />
+ 
+	</globals>
+	
+	<!-- bloco de camaras: o atributo "initial" identifica a camara/ponto de vista inicial, que tem de existir -->
+	<cameras initial="p1" >
+		<!-- tem de existir, pelo menos uma camara dos tipos seguintes (perspective ou ortho) -->
+		<!-- no caso da camara ortho, o atributo "direction" define o eixo segundo o qual se efetua a projecao -->
+
+		<perspective id="p1" near="1" far="50" angle="45" pos="10 10 10" target="0 0 0" />
+		<ortho id="o1" direction="z" near="1" far="15" left="0" right="15" top="15" bottom="0" />
+		<perspective id="p2" near="2" far="15" angle="50" pos="4 13 2" target="4 3 2" />
+	</cameras>
+
+	<!-- bloco de luzes -->
+	<lights>
+			<!-- Deve existir pelo menos uma luz declarada -->
+			<!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
+			<light id="l1" type="omni" enabled="false" marker="false" pos="1 1 2" >
+				<component type="ambient" value="1.0 .12 .250 .4" />
+				<component type="diffuse" value=".5 .50 .200 .3" />
+				<component type="specular" value="0.5 0.5 .20 .2" />
+			</light>
+
+			<light id="l2" type="spot" enabled="false" marker="false" pos="1 1 2" target="5 8 1" angle="45" exponent="2" >
+				<component type="ambient" value=".12 .12 .254 .4" />
+				<component type="diffuse" value=".20 .45 .210 .3" />
+				<component type="specular" value=".20 .14 .20 .3" />
+			</light>
+	</lights>
+
+	<!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas -->
+	<!-- ver topico 'Notas finais' no enunciado sobre os parametros texlength_... -->
+	<textures>
+		<texture id="t1" file="party.png" texlength_s="1" texlength_t="2" />
+		<texture id="t2" file="table.jpg" texlength_s="2" texlength_t="2" />
+		<texture id="t3" file="floor_party.jpg" texlength_s="8" texlength_t="8" />
+		<texture id="t4" file="party_2.jpg" texlength_s="10" texlength_t="10" />
+		<texture id="t5" file="table_wood.jpg" texlength_s="2" texlength_t="2" />
+		<texture id="t6_window" file="window.jpg" texlength_s="4" texlength_t="4" />
+	</textures>
+
+	<!-- bloco de materiais; -->
+	<appearances>
+		<!-- deve existir um ou mais blocos "appearance" -->
+		<!-- IMPORTANTE: -->
+		<!-- textureref e opcional, a utilizar caso haja textura associada a esta aparencia --> 
+		<appearance id="a1" shininess="5" textureref="t1" >
+			<component type="ambient" value=".7 .7 .7 .7" />
+			<component type="diffuse" value="1 1 1 1" />
+			<component type="specular" value=".20 .45 .210 .3" />
+			<!--<component type="ambient" value=".12 .12 .254 .4" />
+			<component type="diffuse" value=".20 .14 .20 .3" />
+			<component type="specular" value=".20 .45 .210 .3" />-->
+		</appearance>
+		
+		<appearance id="a2" shininess="10" textureref="t3">
+			<component type="ambient" value=".53 .26 .12 .3" />
+			<component type="diffuse" value=".53 .26 .12 .3" />
+			<component type="specular" value=".53 .26 .12 .3" />
+		</appearance>
+		
+		
+		<appearance id="a3" shininess="10" textureref="t2">
+			<component type="ambient" value=".7 .7 .7 .7" />
+			<component type="diffuse" value="1 1 1 1" />
+			<component type="specular" value="1 1 1 .3" />
+		</appearance>
+		
+		<appearance id="a4" shininess="10" textureref="t4">
+			<component type="ambient" value=".7 .7 .7 .7" />
+			<component type="diffuse" value="1 1 1 1" />
+			<component type="specular" value="1 1 1 .3" />
+		</appearance>
+		
+		<appearance id="a5" shininess="10" textureref="t5">
+			<component type="ambient" value=".7 .7 .7 .7" />
+			<component type="diffuse" value="1 1 1 1" />
+			<component type="specular" value="1 1 1 .3" />
+		</appearance>
+		
+		<appearance id="a6_window" shininess="10" textureref="t6_window">
+			<component type="ambient" value="1 1 1 1" />
+			<component type="diffuse" value="1 1 1 1" />
+			<component type="specular" value="1 1 1 .3" />
+		</appearance>
+		
+		<!--<appearance id="a2" shininess="10">
+			<component type="ambient" value="12 12 254 4" />
+			<component type="diffuse" value="20 14 20 3" />
+			<component type="specular" value="20 45 210 3" />
+		</appearance>-->
+	</appearances>
+
+	<!-- bloco do grafo; "rootid" identifica o no de raiz -->
+	<graph rootid="ss">
+
+		<!-- tem de existir, pelo menos, um bloco "node" -->
+		<node id="ss">
+			<!-- bloco "transforms" obrigatorio -->
+			<transforms>
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<!-- se id="inherit", o no' mantem (herda) a aparencia do "pai" -->
+			<appearanceref id="a1" />
+
+			<descendants>
+				<!-- Referencia a outros elementos do grafo -->
+				<!-- (repetir o no. de vezes necessario) -->
+				<!-- LEMBRANDO: qualquer no' pode ser referenciado previamente 'a sua declaracao; isto -->
+				<!--			e', a ordem pela qual os nos sao declarados e' irrelevante -->
+				<noderef id="hat_front_left" />
+				<noderef id="hat_back_left" />
+				<noderef id="hat_front_right" />
+				<noderef id="hat_back_right" />
+				<noderef id="table" />
+				<noderef id="floor" />
+				<noderef id="wall_left" />
+				<noderef id="wall_front" />
+				<noderef id="window" />
+			</descendants>
+		</node>
+		<node id="table">
+			<transforms>
+				<transform type="translate" to="7.5 3 7.5" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a3" />
+			
+			<descendants>
+				<noderef id="tabletop" />
+				<noderef id="front_left_leg" />
+				<noderef id="front_right_leg" />
+				<noderef id="back_left_leg" />
+				<noderef id="back_right_leg" />
+			</descendants>
+			
+		</node>
+		<node id="tabletop">
+			<transforms>
+				<transform type="scale" factor="3.5 0.1 3.5" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			
+			<appearanceref id="a3" />
+			
+			<primitives>
+				<cylinder base="1" top="1" height="2" slices="20" stacks="30" />
+			</primitives>
+		
+		</node>
+		<node id="front_left_leg">
+			<transforms>
+				<transform type="translate" to="-2 -3 -2" />
+				<transform type="scale" factor="0.3 1 0.3" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			
+			<appearanceref id="a5" />
+			
+			<primitives>
+				<cylinder base="1" top="1" height="3" slices="20" stacks="30" />
+			</primitives>
+		
+		</node>
+		<node id="front_right_leg">
+			<transforms>
+				<transform type="translate" to="2 -3 -2" />
+				<transform type="scale" factor="0.3 1 0.3" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			
+			<appearanceref id="a5" />
+			
+			<primitives>
+				<cylinder base="1" top="1" height="3" slices="30" stacks="30" />
+			</primitives>
+		
+		</node>
+		<node id="back_left_leg">
+			<transforms>
+				<transform type="translate" to="-2 -3 2" />
+				<transform type="scale" factor="0.3 1 0.3" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			
+			<appearanceref id="a5" />
+			
+			<primitives>
+				<cylinder base="1" top="1" height="3" slices="30" stacks="30" />
+			</primitives>
+		
+		</node>
+		<node id="back_right_leg">
+			<transforms>
+				<transform type="translate" to="2 -3 2" />
+				<transform type="scale" factor="0.3 1 0.3" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			
+			<appearanceref id="a5" />
+			
+			<primitives>
+				<cylinder base="1" top="1" height="3" slices="30" stacks="30" />
+			</primitives>
+		
+		</node>
+		<node id="hat_front_left">
+			<transforms>
+				<transform type="translate" to="6 3.3 6" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a1" />
+
+
+			<descendants>
+				<noderef id="hat" />
+			</descendants>
+		</node>
+		<node id="hat_back_left">
+			<transforms>
+				<transform type="translate" to="6 3.3 9" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a1" />
+
+			<descendants>
+				<noderef id="hat" />
+			</descendants>
+		</node>
+		<node id="hat_front_right">
+			<transforms>
+				<transform type="translate" to="9 3.3 6" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a1" />
+
+			<descendants>
+				<noderef id="hat" />
+			</descendants>
+		</node>
+		<node id="hat_back_right">
+			<transforms>
+				<transform type="translate" to="9 3.3 9" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a1" />
+
+			<descendants>
+				<noderef id="hat" />
+			</descendants>
+		</node>
+		<node id="hat">
+			<transforms>
+				<transform type="rotate" axis="x" angle="-90" />
+				<transform type="scale" factor="0.3 0.3 0.3" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<cylinder base="2" top="0" height="8" slices="20" stacks="30" />
+				<torus inner="0.5" outer="2" slices="20" loops="20" />
+			</primitives>
+		</node>
+		<node id="floor">
+			<transforms>
+				<!--<transform type="translate" to="6.5 0 3.5" />-->
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a2" />
+			
+			<primitives>
+				<rectangle xy1="0 15" xy2="15 0" />
+
+			</primitives>
+				
+		</node>
+		<node id="wall_left">
+			<transforms>
+				<!--<transform type="translate" to="6.5 0 3.5" />-->
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a4" />
+			
+			<primitives>
+				<rectangle xy1="0 10" xy2="15 0" />
+			</primitives>
+			
+		</node>
+		<node id="wall_front">
+			<transforms>
+				<transform type="translate" to="0 10 0" />-->
+				<transform type="rotate" axis="x" angle="180" />
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a4" />
+			
+			<primitives>
+				<rectangle xy1="0 10" xy2="15 0" />
+			</primitives>
+			
+		</node>
+		<node id="window">
+			<transforms>
+			</transforms>
+
+			<!-- declaracao da aparencia a utilizar -->
+			<appearanceref id="a6_window" />
+			
+			<primitives>
+				<triangle xyz1="0.1 4 8" xyz2="0.1 4 4" xyz3="0.1 8 6" />
+			</primitives>
+			
+		</node>
+	</graph>
+</anf>
