@@ -7,7 +7,15 @@ void lightElement::addLight(light * light)
 
 lightElement::lightElement() {}
 
-bool lightElement::setElement(TiXmlElement * elem) {element = elem; return true; }
+bool lightElement::setElement(TiXmlElement * elem) {
+	if (elem != NULL)
+	{
+		element = elem;
+		return true;
+	} else {
+		return false;
+	}
+}
 
 TiXmlElement * lightElement::getElement() {return element; }
 

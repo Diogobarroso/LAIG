@@ -20,8 +20,7 @@
 #include "PerspectiveCamera.h"
 #include "OrthoCamera.h"
 
-#include "omnilight.h"
-#include "spotlight.h"
+#include "light.h"
 
 #include "Appearence.h"
 
@@ -56,16 +55,9 @@ public:
 			activeCamera = scene_cameras[index]; 
 			CGFapplication::activeApp->forceRefresh();}
 
-	int * getActiveDrawModePointer () { return &activeDrawMode; }
-	void setActiveDrawMode (int index);
-
-
 	std::vector<Camera *> getCameras() { return scene_cameras; }
 	std::vector<light *> getLights() {return scene_lights; }
 	light * getLight(int i) {return scene_lights[i]; }
-
-	vector<light * > scene_lights;
-
 	~ANFScene();
 
 protected:
@@ -86,7 +78,8 @@ protected:
 
 	std::vector<Camera *> scene_cameras;
 	int activeCameraIndex;
-	int activeDrawMode;
+
+	std::vector<light *> scene_lights;
 
 	void processGlobal ();
 	void processCameras ();

@@ -1,5 +1,5 @@
 #include "Texture.h"
-#include <GL\GL.h>
+#include <GL/gl.h>
 
 Texture::Texture ()
 {

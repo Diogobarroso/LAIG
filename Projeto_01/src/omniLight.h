@@ -1,7 +1,7 @@
 
 #include "light.h"
 
-class omniLight: public light
+c/*lass omniLight: public light
 {
 	string name;
 public:
@@ -10,4 +10,4 @@ public:
 	float * getExponent() {return NULL;}
 	void setName(string name);
 	string getName() {return name; }
-};
+};*/

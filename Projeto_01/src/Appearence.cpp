@@ -1,5 +1,5 @@
 #include "Appearence.h"
-#include <GL\GL.h>
+//#include <GL\GL.h>
 
 Appearence::Appearence()
 {

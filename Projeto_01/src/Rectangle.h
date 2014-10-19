@@ -1,12 +1,11 @@
 #pragma once
-#include "primitive.h"
+#include "Primitive.h"
 class Rectangle :
 	public Primitive
 {
 private:
 	float x1, x2, y1, y2;
 	Vector3 normalVec;
-	Vector3 originTranslate;
 	
 public:
 	Rectangle(void);

@@ -3,39 +3,48 @@
 
 #include "Color.h"
 #include "CGFlight.h"
-#include "Vector3.h"
+#include <string>
 
 class light: public CGFlight {
 protected:
+	bool isOmni;
 	int id;
 	bool enabled;
 	bool marker;
 	Color ambient;
 	Color diffuse;
 	Color specular;
-	Vector3 pos;
+	float angle;
+	float exponent;
+	string name;
 public:
 	light(unsigned int lightid, float* pos, float *dir=NULL);
-	int getId() {return id; }
-	bool enable();
-	bool disable();
+
+	//Sets
 	bool setId(int id);
+	bool setName(string name);
 	bool setAmbient(Color col);
 	bool setDiffuse(Color col);
 	bool setSpecular(Color col);
+	bool setAngle(float a);
+	bool setExponent(float e);
 	bool setPosition(float * p);
-	int * isEnabled();
-	bool isMarkerEnabled() {return marker; }
+	bool setDirection(float * d);
 	bool enableMarker();
 	bool disableMarker();
-	Color getAmbient();
-	Color getDiffuse();
-	Color getSpecular();
-	Vector3 getPosition();
-	virtual string getName() { return "";}
 
-	virtual Vector3 * getTarget() {return NULL;};
-	virtual float * getExponent() {return NULL;};
+	//Gets
+	int getId() { return id; }
+	string getName() { return name; }
+	bool isEnabled() { return enabled; }
+	bool isMarkerEnabled() { return marker; }
+	float* getPosition(){ return position; }
+	float* getDirection(){ return direction; }
+	float getAngle(){ return angle; }
+	float getExponent(){ return exponent; }
+	Color getAmbient(){ return ambient; }
+	Color getDiffuse(){ return diffuse; }
+	Color getSpecular(){ return specular; }
 
 	void draw();
 };

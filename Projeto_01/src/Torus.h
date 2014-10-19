@@ -1,5 +1,5 @@
 #pragma once
-#include "primitive.h"
+#include "Primitive.h"
 #include <vector>
 
 class Torus :

@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "transformation.h"
+#include "Transformation.h"
 
 class RotateTransformation :
 	public Transformation
