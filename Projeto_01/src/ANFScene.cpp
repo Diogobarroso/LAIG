@@ -445,7 +445,7 @@ void ANFScene::processLights ()
 	std::vector<std::string>::iterator it;
 
 	int lightCounter = 0;
-	float position[3];
+	float position[4];
 
 	if(lights.getElement() == NULL)
 		printf("Lights Element not found\n");
@@ -535,13 +535,14 @@ void ANFScene::processLights ()
 						failed = true;
 					else
 					{
+						printf("1\n");
 						position[0] = x;
 						position[1] = y;
 						position[2] = z;
 
 						content = std::string(lightIt->Attribute( "target" ));
 						float target[4];
-						float tmp[4];
+						float tmp[5];
 						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
 							failed = true;
 						else
@@ -573,6 +574,7 @@ void ANFScene::processLights ()
 							
 							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
 							{
+								tmp[3] = 0.0;
 								spot->setTarget(tmp);
 							}
 
