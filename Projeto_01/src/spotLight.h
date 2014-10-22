@@ -25,6 +25,8 @@ public:
 	void setExponent(float e);
 	void setPosition(float * p);
 	void setTarget(float * t);
+	void setName(string name);
+	string getName() {return name; }
 
 	static float background_ambient[4];
 
@@ -32,6 +34,7 @@ protected:
 	static CGFappearance* default_light_material;
 
 	unsigned int id;
+	string name;
 	float ambient[4];
 	float diffuse[4];
 	float specular[4];
