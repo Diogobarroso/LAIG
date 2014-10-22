@@ -1,5 +1,5 @@
 #pragma once
-#include "cgfinterface.h"
+#include "CGFinterface.h"
 
 #include "ANFScene.h"
 

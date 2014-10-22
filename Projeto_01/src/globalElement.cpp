@@ -1,5 +1,5 @@
 #include "globalElement.h"
-#include <GL\GL.h>
+#include <GL/gl.h>
 
 globalElement::globalElement()
 {

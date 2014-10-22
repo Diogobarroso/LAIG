@@ -57,8 +57,13 @@ ANFScene::ANFScene(char *filename)
 		return;
 	}
 
-	lights = lightElement();
-	lights.setElement (anfElement -> FirstChildElement ( "lights" ));
+	lights = new lightElement();
+	if (!lights->setElement (anfElement -> FirstChildElement ( "lights" )))
+	{
+		printf( "Lights Element not found\n");
+		system("pause");
+		return;
+	}
 
 	textures = new textureElement();
 	if(!textures->setElement (anfElement -> FirstChildElement ( "textures" )))
@@ -143,19 +148,18 @@ void ANFScene::init()
 	glCullFace(global->getCullFace());
 	glFrontFace(global->getCullOrder());
 
-
-	/* INIT CAMERA */
-//	activeCamera = cameras->getActiveCamera();
-
-
 	/* ------------- */
+	glEnable(GL_NORMALIZE);
 
-	for(unsigned int i = 0; i < lights.getLightSet().size(); i++)
+	for(unsigned int i = 0; i < lights->getLightSet().size(); i++)
 	{
-		lights.getLight(i)->setKc(0.0);
-		lights.getLight(i)->setKl(0.2);
-		lights.getLight(i)->setKq(0.0);
-		scene_lights.push_back(lights.getLight(i));
+
+		scene_lights.push_back(lights->getLight(i));
+
+		if( scene_lights[i]->isEnabled() )
+			lightsEnabled.push_back( 1 );
+		else
+			lightsEnabled.push_back( 0 );
 	}
 
 }
@@ -166,20 +170,30 @@ void ANFScene::display()
 
 	// Clear image and depth buffer everytime we update the scene
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glClearColor(global->getDrawBackground().getRed(),global->getDrawBackground().getGreen(), global->getDrawBackground().getBlue(), global->getDrawBackground().getAlpha());
 
 	// Initialize Model-View matrix as identity (no transformation
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	// Apply transformations corresponding to the camera position relative to the origin
-	//CGFscene::activeCamera->applyView();
 
 	activeCamera = scene_cameras[activeCameraIndex];
 	activeCamera->applyView();
+	
+
+	for( unsigned int i=0; i<scene_lights.size(); i++ ){
+		if( lightsEnabled[i] == 1 )
+			scene_lights[i]->enable();
+		else
+			scene_lights[i]->disable();
+		//Draw or update
+		scene_lights[i]->draw();
+	}
 
 	// Draw axis
+	glPushMatrix();
 	axis.draw();
+	glPopMatrix();
 
 	// ---- END Background, camera and axis setup
 
@@ -188,8 +202,6 @@ void ANFScene::display()
 	glPolygonMode(GL_FRONT_AND_BACK, global->getDrawMode());
 
 	//light0->draw();
-	for(int i = 0; i < lights.getLightSet().size(); i++)
-		lights.getLight(i)->draw();
 
 	navigateGraph(graph->getRoot());
 
@@ -225,6 +237,13 @@ void ANFScene::processGlobal ()
 		content = std::string ( drawingElement->Attribute("mode"));
 		if (!global->setDrawMode(content))
 			failed = true;
+
+		if (content == "fill")
+			setActiveDrawMode(0);
+		else if (content == "line")
+			setActiveDrawMode(1);
+		else if (content == "point")
+			setActiveDrawMode(2);
 
 		content = std::string ( drawingElement->Attribute("shading"));
 		if (!global->setDrawShading(content))
@@ -334,9 +353,7 @@ void ANFScene::processCameras ()
 			}
 
 			if (content == cameras->getInitial())
-			{
 				activeCameraIndex = cameraCount;
-			}
 
 			if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
 				if (!cam->setNear(f))
@@ -369,7 +386,7 @@ void ANFScene::processCameras ()
 				if (!cam->setTarget(x,y,z))
 					failed = true;
 			}
-			
+
 			scene_cameras.push_back(cam);
 		} else if (content == "ortho")
 		{
@@ -390,9 +407,7 @@ void ANFScene::processCameras ()
 			}
 
 			if (content == cameras->getInitial())
-			{
 				activeCameraIndex = cameraCount;
-			}
 
 			if (camera->QueryFloatAttribute("near",&f)==TIXML_SUCCESS)
 				if (!cam->setNear(f))
@@ -424,13 +439,13 @@ void ANFScene::processCameras ()
 
 			scene_cameras.push_back(cam);
 		}
-		
+
 		cameraCount ++;
 	}
 
-	std::cout << "\tFound " << cameraCount << " camera(s)\n";
-
 	setActiveCameraIndex(activeCameraIndex);
+
+	std::cout << "\tFound " << cameraCount << " camera(s)\n";
 }
 
 void ANFScene::processLights ()
@@ -444,182 +459,149 @@ void ANFScene::processLights ()
 	int lightCounter = 0;
 	float position[4];
 
-	if(lights.getElement() == NULL)
+	if(lights->getElement() == NULL)
 		printf("Lights Element not found\n");
 	else
 	{
 		printf("Processing Lights\n");
-		TiXmlElement * lightIt = lights.getElement()->FirstChildElement("light");
+		TiXmlElement * lightIt = lights->getElement()->FirstChildElement("light");
 
 		for(; lightIt != NULL; lightIt = lightIt->NextSiblingElement( "light" ))
 		{
 			lightCounter++;
-			printf("The lightCounter is %u, next Light is called %s\n", lightCounter, lightIt->Attribute( "id" ));
 
 			if(lightCounter >= 8)
+			{
+				printf("Too many lights.\n");
 				break;
+			}
 			else
 			{
-				content = std::string(lightIt->Attribute( "type" ));
-				if(content == "omni")
+				content = std::string(lightIt->Attribute( "pos" ));
+				const char * content_c = content.c_str();
+				if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) != 3)
 				{
+					printf("Error: %s has an invalid position\n", lightIt->Attribute("id"));
+					failed = true;
+				}
+				else
+				{
+					position[0] = x;
+					position[1] = y;
+					position[2] = z;
+					position[3] = 1.0;
 
-					content = std::string(lightIt->Attribute( "pos" ));
-					const char * content_c = content.c_str();
-					if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) != 3)
+					light * nextlight;
+
+					content = std::string(lightIt->Attribute( "type" ));
+					if(content == "spot")
+					{	//Spot
+						float target[3];
+						float dir[3];
+						//Target
+						content = std::string(lightIt->Attribute( "target" ));
+						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
+						{	//Default values on failure.
+							target[0] = 0;
+							target[1] = 0;
+							target[2] = 0;
+							failed = true;
+						}
+						else
+						{
+							target[0] = x;
+							target[1] = y;
+							target[2] = z;
+						}
+						dir[0] = target[0] - position[0];
+						dir[1] = target[1] - position[1];
+						dir[2] = target[2] - position[2];
+						nextlight = new light( GL_LIGHT0 + lightCounter - 1, position , dir );
+
+						if(lightIt->QueryFloatAttribute("angle",&f)==TIXML_SUCCESS)
+							nextlight->setAngle(f);
+
+						if(lightIt->QueryFloatAttribute("exponent",&f)==TIXML_SUCCESS)
+							nextlight->setExponent(f);
+
+					} else if(content == "omni" )
+					{	//Omni
+						nextlight = new light( GL_LIGHT0 + lightCounter - 1, position, NULL );
+					}
+
+					content = std::string(lightIt->Attribute( "type" ));
+					if( content!="spot" && content!="omni" )
+					{
+						printf("ERROR -> Light wasn't omni nor spot\n");
 						failed = true;
+					}
 					else
 					{
-						position[0] = x;
-						position[1] = y;
-						position[2] = z;
+						//Name
+						content = std::string(lightIt->Attribute( "id" ));
+						nextlight->setName(content);
 
-						omniLight * omni = new omniLight(GL_LIGHT0 + lightCounter - 1, position , NULL);
+						//ID
+						nextlight->setId( lightCounter - 1 );
 
-						//content = std::string(lightIt->Attribute( "id" ));
-						//omni->setId(content);
-
+						//Enabled/Disabled
 						content = std::string(lightIt->Attribute( "enabled" ));
-						content == "true"? omni->enable() : omni->disable();
+						content == "true"? nextlight->enable() : nextlight->disable();
 
+						//Marker
 						content = std::string(lightIt->Attribute( "marker" ));
-						content == "true"? omni->enableMarker() : omni->disableMarker();
+						content == "true"? nextlight->enableMarker() : nextlight->disableMarker();
 
+						//Ambient
 						TiXmlElement * component = lightIt->FirstChildElement( "component" );
 						content = component->Attribute( "type" );
 						if(content != "ambient")
 							failed = true;
 						else
 						{
-							content_c = component->Attribute( "value" );
+							content = std::string ( component->Attribute( "value" ));
+							const char* content_c = content.c_str();
 							if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
-								if(!omni->setAmbient(Color(r,g,b,a)))
-									failed = true;
+							{
+								Color c = Color(r,g,b,a);
+								nextlight->setAmbient(c.getArray());
+							}
 						}
 
+						//Diffuse
 						component = component->NextSiblingElement( "component" );
 						content = component->Attribute( "type" );
 						if(content != "diffuse")
 							failed = true;
 						else
 						{
-							content_c = component->Attribute( "value" );
+							content = std::string ( component->Attribute( "value" ));
+							const char* content_c = content.c_str();
 							if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
-								if(!omni->setDiffuse(Color(r,g,b,a)))
-									failed = true;
+							{
+								Color c = Color(r,g,b,a);
+								nextlight->setDiffuse(c.getArray());
+							}
 						}
 
+						//Specular
 						component = component->NextSiblingElement( "component" );
 						content = component->Attribute( "type" );
 						if(content != "specular")
 							failed = true;
 						else
 						{
-							content_c = component->Attribute( "value" );
+							content = std::string ( component->Attribute( "value" ));
+							const char* content_c = content.c_str();
 							if(content_c && sscanf(content_c, "%f %f %f %f", &r, &g, &b, &a) == 4)
-								if(!omni->setSpecular(Color(r,g,b,a)))
-									failed = true;
-						}
-
-						lights.addLight(omni);
-					}
-				}
-				else if(content == "spot")
-				{
-					content = std::string(lightIt->Attribute( "pos" ));
-					const char * content_c = content.c_str();
-					if(content_c && sscanf(content_c, "%f %f %f", &x, &y, &z) != 3)
-						failed = true;
-					else
-					{
-						printf("1\n");
-						position[0] = x;
-						position[1] = y;
-						position[2] = z;
-
-						content = std::string(lightIt->Attribute( "target" ));
-						float target[4];
-						float tmp[5];
-						if(content.c_str() && sscanf(content.c_str(), "%f %f %f", &x, &y, &z) != 3)
-							failed = true;
-						else
-						{
-							target[0] = x;
-							target[1] = y;
-							target[2] = z;
-							target[3] = 1.0;
-							spotLight * spot = new spotLight(GL_LIGHT0 + lightCounter - 1, position , target);
-
-							//content = std::string(lightIt->Attribute( "id" ));
-							//spot->setId(content);
-
-							content = std::string(lightIt->Attribute( "enabled" ));
-							content == "true"? spot->enable() : spot->disable();
-
-							content = std::string(lightIt->Attribute( "marker" ));
-							content == "true"? spot->enableMarker() : spot->disableMarker();
-
-							content = std::string(lightIt->Attribute( "pos" ));
-
-							const char * content_c = content.c_str();
-
-							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
 							{
-								tmp[3] = 1.0;
-								spot->setPosition(tmp);
-							}
-							
-							if(content_c && sscanf(content_c, "%f %f %f", &tmp[0], &tmp[1], &tmp[2]) == 3)
-							{
-								tmp[3] = 0.0;
-								spot->setTarget(tmp);
-							}
-
-							float f;
-
-							if(lightIt->QueryFloatAttribute("angle",&f)==TIXML_SUCCESS)
-								spot->setAngle(f);
-
-							if(lightIt->QueryFloatAttribute("exponent",&f)==TIXML_SUCCESS)
-								spot->setExponent(f);
-
-							TiXmlElement * component = lightIt->FirstChildElement( "component" );
-							content = component->Attribute( "type" );
-							if(content != "ambient")
-								failed = true;
-							else
-							{
-								content_c = component->Attribute( "value" );
-								if(content_c && sscanf(content_c, "%f %f %f %f", &tmp[0], &tmp[1], &tmp[2], &tmp[3]) == 4)
-									spot->setAmbient(tmp);
-
-								component = component->NextSiblingElement("component");
-								content = component->Attribute( "type" );
-								if(content != "diffuse")
-									failed = true;
-								else
-								{
-									content_c = component->Attribute( "value" );
-									if(content_c && sscanf(content_c, "%f %f %f %f", &tmp[0], &tmp[1], &tmp[2], &tmp[3]) == 4)
-										spot->setDiffuse(tmp);
-								}
-
-
-								component = component->NextSiblingElement( "component" );
-								content = component->Attribute( "type" );
-								if(content != "specular")
-									failed = true;
-								else
-								{
-									content_c = component->Attribute( "value" );
-									if(content_c && sscanf(content_c, "%f %f %f %f", &tmp[0], &tmp[1], &tmp[2], &tmp[3]) == 4)
-										spot->setSpecular(tmp);
-								}
-
-								glEnable(GL_LIGHT0 + lightCounter - 1);
-								lights.addLight(spot);
+								Color c = Color(r,g,b,a);
+								nextlight->setSpecular(c.getArray());
 							}
 						}
+
+						//Add light
+						lights->addLight(nextlight);
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 #include "appearenceElement.h"
-#include <GL\GL.h>
+//#include <GL\GL.h>
 
 appearenceElement::appearenceElement()
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GL\gl.h"
+#include "GL/gl.h"
 
 class Transformation
 {

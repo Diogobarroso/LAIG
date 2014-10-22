@@ -9,7 +9,6 @@
 #include "CGFapplication.h"
 #include "DemoScene.h"
 
-#include "XMLScene.h"
 #include "ANFScene.h"
 #include "ANFInterface.h"
 

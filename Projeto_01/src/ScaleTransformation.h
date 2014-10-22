@@ -1,5 +1,5 @@
 #pragma once
-#include "transformation.h"
+#include "Transformation.h"
 class ScaleTransformation :
 	public Transformation
 {

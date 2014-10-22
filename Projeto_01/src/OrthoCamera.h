@@ -1,8 +1,9 @@
 #pragma once
 
-#include "camera.h"
-#include "GL\gl.h"
-#include "GL\glu.h"
+#include "Camera.h"
+#include "GL/gl.h"
+#include "GL/glu.h"
+#include <cstdio>
 
 class OrthoCamera : public Camera
 {
