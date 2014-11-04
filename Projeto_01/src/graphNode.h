@@ -19,6 +19,7 @@ private:
 	std::vector <std::string> descendantsID;
 	Appearence * appearence;
 	bool visited;
+	int displayList;
 
 public:
 	graphNode();
@@ -46,6 +47,10 @@ public:
 	void applyMaterial () { appearence->apply(); }
 	void applyTransforms ();
 	void draw (float s, float t);
+
+	int displayListValue() { return displayList;}
+	void setDisplayList(int a) { displayList = a; }
+	void startDisplayList();
 
 	float matrix [16];
 

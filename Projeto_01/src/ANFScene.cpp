@@ -142,6 +142,7 @@ void ANFScene::init()
 		glLightModelf (GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 	}
 
+	generateDisplayLists();
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global->getLightAmbientColor().getArray());
 
@@ -179,7 +180,7 @@ void ANFScene::display()
 
 	activeCamera = scene_cameras[activeCameraIndex];
 	activeCamera->applyView();
-	
+
 
 	for( unsigned int i=0; i<scene_lights.size(); i++ ){
 		if( lightsEnabled[i] == 1 )
@@ -774,7 +775,6 @@ void ANFScene::processGraph ()
 		graphNode * node = new graphNode ();
 		node->setElement(nodeEle);
 
-
 		it = find (usedIDs.begin(), usedIDs.end(),  content);
 
 		if (it == usedIDs.end())
@@ -785,6 +785,36 @@ void ANFScene::processGraph ()
 			std::cout << "\tID " << content << " is already in use\n";
 			failed = true;
 		}
+
+		/* Process Display Lists */
+
+		const char * displayList = nodeEle->Attribute("displaylist");
+
+		if(displayList != NULL)
+		{
+			if(strcmp(displayList, "true") == 0)
+			{
+				cout << "I am " << node->getID() << " and I was considered a Display Listed Node\n";
+				displayListedNodes.push_back(node);
+				node->setDisplayList(0); //The display list exists, yet to be created
+			}
+			else if(strcmp(displayList, "false") == 0)
+			{
+				node->setDisplayList(-1); //The display list doesn't exist in this case
+				printf("(inside if) DISPLAY LIST = -1\n");
+			}
+			else
+			{
+				printf("ERROR: This object has an invalid Display List value (only true or false accepted).\n False will be considered by default.\n");
+				node->setDisplayList(-1);
+			}
+		}
+		else
+		{
+			node->setDisplayList(-1); //The display list doesn't exist in this case
+			printf("(outside if) DISPLAY LIST = -1\n");
+		}
+
 
 		/* Process Transforms */
 		TiXmlElement* TransformEle = nodeEle->FirstChildElement( "transforms" );
@@ -1080,6 +1110,10 @@ void ANFScene::navigateGraph (graphNode * node)
 		appearenceStack.push(actualAppearence);
 	}
 
+	cout << "I am " << node->getID();
+
+
+	printf("No display list. Drawing manually\n");
 	node->setVisited(true);
 	// Process node
 	glPushMatrix();
@@ -1095,7 +1129,6 @@ void ANFScene::navigateGraph (graphNode * node)
 		node->draw(tex->getLength_s(), tex->getLength_t());
 
 	std::vector <graphNode *> descendants = node->getDescendants();
-
 	for (unsigned int desc = 0; desc < descendants.size(); desc++)
 	{
 		graphNode * descNode = descendants[desc];
@@ -1128,6 +1161,18 @@ void ANFScene::setActiveDrawMode (int index)
 	case 2:
 		global->setDrawMode("point");
 		break;
+	}
+}
+
+void ANFScene::generateDisplayLists()
+{
+	printf("The vector has %d elements\n", displayListedNodes.size());
+
+	for(int i = 0; i < displayListedNodes.size(); i++)
+	{
+		displayListedNodes[i]->setDisplayList(glGenLists(1));
+
+		displayListedNodes[i]->startDisplayList();
 	}
 }
 

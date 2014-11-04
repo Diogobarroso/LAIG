@@ -59,6 +59,9 @@ public:
 	int * getActiveDrawModePointer () { return &activeDrawMode; }
 	int activeDrawMode;
 
+	vector<GLuint> displayListIndexes;
+	vector<graphNode *> displayListedNodes;
+
 	std::vector<Camera *> getCameras() { return scene_cameras; }
 	std::vector<light *> getLights() {return scene_lights; }
 	light * getLight(int i) {return scene_lights[i]; }
@@ -96,6 +99,8 @@ protected:
 	bool generateGraph ();
 	void generateMatrices (graphNode * node);
 	void navigateGraph (graphNode * node);
+
+	void generateDisplayLists();
 	
 
 };

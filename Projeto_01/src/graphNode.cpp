@@ -8,6 +8,7 @@ graphNode::graphNode(void)
 	transformations = std::vector <Transformation *> ();
 
 	visited = false;
+	displayList = false;
 }
 
 bool graphNode::setElement (TiXmlElement * ele)
@@ -36,10 +37,21 @@ void graphNode::applyTransforms ()
 
 void graphNode::draw(float s, float t)
 {
-	for (unsigned int primitive = 0; primitive < primitives.size(); primitive++)
-	{
-		primitives[primitive]->draw(s,t);
-	}
+	if(displayList == -1)
+		for (unsigned int primitive = 0; primitive < primitives.size(); primitive++)
+		{
+			primitives[primitive]->draw(s,t);
+		}
+	else
+		glCallList(displayList);
+}
+
+void graphNode::startDisplayList()
+{
+	glNewList(displayList, GL_COMPILE);
+	for(int i = 0; i < descendants.size(); i++)
+		descendants[i]->draw(1,1);
+	glEndList();
 }
 
 graphNode::~graphNode(void)
