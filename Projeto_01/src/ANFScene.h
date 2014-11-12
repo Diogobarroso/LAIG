@@ -34,6 +34,7 @@
 #include "Cylinder.h"
 #include "Sphere.h"
 #include "Torus.h"
+#include "Plane.h"
 
 #include "myUnitCube.h"
 

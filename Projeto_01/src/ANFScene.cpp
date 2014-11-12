@@ -1033,6 +1033,20 @@ void ANFScene::processGraph ()
 
 				node->addPrimitive(tor);
 			}
+
+			/* Find all Planes */
+			for (TiXmlElement * plane = PrimitiveEle->FirstChildElement( "plane" ); plane != NULL; plane = plane->NextSiblingElement("plane"))
+			{
+				valid = true;
+				float nDivisions = 1;
+
+				if (plane->QueryFloatAttribute("parts",&f)==TIXML_SUCCESS)
+					nDivisions = f;
+
+				Plane * pl = new Plane(nDivisions);
+
+				node->addPrimitive(pl);
+			}
 		}
 		/* Process Descendants */
 
@@ -1198,7 +1212,7 @@ void ANFScene::messageChildren(graphNode * root)
 		root->getDescendants()[i]->message(root);
 		messageChildren(root->getDescendants()[i]);
 	}
-	
+
 }
 
 ANFScene::~ANFScene()
