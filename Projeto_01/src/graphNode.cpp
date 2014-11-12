@@ -54,6 +54,11 @@ void graphNode::startDisplayList()
 	glEndList();
 }
 
+void graphNode::message(graphNode * parent)
+{
+	dListVec.push_back(make_pair(parent, -1));
+}
+
 graphNode::~graphNode(void)
 {
 }

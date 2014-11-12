@@ -59,6 +59,7 @@ void OrthoCamera::updateProjectionMatrix(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho (left, right, bottom, top, near, far);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void OrthoCamera::applyView()
@@ -87,7 +88,8 @@ void OrthoCamera::applyView()
 		gluLookAt(position[0], position[1], position[2], 0,0,0, 0,1,0);
 		break;
 	}
-	
+
+	glMatrixMode(GL_MODELVIEW);	
 }
 
 OrthoCamera::~OrthoCamera(void)

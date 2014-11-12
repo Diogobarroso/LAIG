@@ -142,6 +142,7 @@ void ANFScene::init()
 		glLightModelf (GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 	}
 
+	messageChildren(graph->getRoot());
 	generateDisplayLists();
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global->getLightAmbientColor().getArray());
@@ -1170,10 +1171,34 @@ void ANFScene::generateDisplayLists()
 
 	for(int i = 0; i < displayListedNodes.size(); i++)
 	{
-		displayListedNodes[i]->setDisplayList(glGenLists(1));
+		for(int j = 0; j < displayListedNodes[i]->getDListVec().size(); j++)
+		{
+			Appearence * actualAppearence = displayListedNodes[i]->getDListVec()[j].first->getAppearence();
 
-		displayListedNodes[i]->startDisplayList();
+			if (actualAppearence != NULL)
+			{
+				appearenceStack.push(actualAppearence);
+			}
+
+			displayListedNodes[i]->insertPair(make_pair(displayListedNodes[i]->getDListVec()[j].first, glGenLists(1)));
+
+			displayListedNodes[i]->removePair(j);
+
+		}
+		//displayListedNodes[i]->setDisplayList(glGenLists(1));
+
+		//displayListedNodes[i]->startDisplayList();
 	}
+}
+
+void ANFScene::messageChildren(graphNode * root)
+{
+	for(int i = 0; i < root->getDescendants().size(); i++)
+	{
+		root->getDescendants()[i]->message(root);
+		messageChildren(root->getDescendants()[i]);
+	}
+	
 }
 
 ANFScene::~ANFScene()

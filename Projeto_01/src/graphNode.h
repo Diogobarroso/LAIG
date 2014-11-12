@@ -20,6 +20,7 @@ private:
 	Appearence * appearence;
 	bool visited;
 	int displayList;
+	vector<std::pair<graphNode *, int> > dListVec; //string is the parentID and int is the displayList compiled with parentID appearance
 
 public:
 	graphNode();
@@ -44,6 +45,8 @@ public:
 	void setVisited (bool v) { visited = v; }
 	bool getVisited () { return visited; }
 
+	vector<pair<graphNode *, int> > getDListVec() {return dListVec;}
+
 	void applyMaterial () { appearence->apply(); }
 	void applyTransforms ();
 	void draw (float s, float t);
@@ -51,6 +54,9 @@ public:
 	int displayListValue() { return displayList;}
 	void setDisplayList(int a) { displayList = a; }
 	void startDisplayList();
+	void message(graphNode * parent);
+	void removePair(int a) {dListVec.erase(dListVec.begin() + a);}
+	void insertPair(pair<graphNode *, int> tmp) {dListVec.push_back(tmp);}
 
 	float matrix [16];
 

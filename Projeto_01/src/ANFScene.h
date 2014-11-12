@@ -101,6 +101,7 @@ protected:
 	void navigateGraph (graphNode * node);
 
 	void generateDisplayLists();
+	void messageChildren(graphNode * node);
 	
 
 };
