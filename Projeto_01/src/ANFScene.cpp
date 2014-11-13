@@ -991,7 +991,7 @@ void ANFScene::processGraph ()
 				node->addPrimitive(cyl);
 			}
 
-			/* Find all cylinders */
+			/* Find all spheres */
 			for (TiXmlElement * sphere = PrimitiveEle->FirstChildElement( "sphere" ); sphere != NULL; sphere = sphere->NextSiblingElement("sphere"))
 			{
 				valid = true;
@@ -1046,6 +1046,61 @@ void ANFScene::processGraph ()
 				Plane * pl = new Plane(nDivisions);
 
 				node->addPrimitive(pl);
+			}
+
+			/* Find all Patches */
+			for (TiXmlElement * patch = PrimitiveEle->FirstChildElement( "patch" ); patch != NULL; patch = patch->NextSiblingElement("patch"))
+			{
+				valid = true;
+
+				Patch * p = new Patch();
+
+				if (patch->QueryIntAttribute("order",&s)==TIXML_SUCCESS)
+					p->setOrder(s);
+
+				if (patch->QueryIntAttribute("partsU",&s)==TIXML_SUCCESS)
+					p->setUDivisions(s);
+
+				if (patch->QueryIntAttribute("partsV",&s)==TIXML_SUCCESS)
+					p->setVDivisions(s);
+
+
+				content = std::string ( patch->Attribute("compute"));
+
+				if (content == "fill")
+				{
+					p->setCompute(0);
+				}
+				else if (content == "line")
+				{
+					p->setCompute(1);
+				}
+				else if (content == "point")
+				{
+					p->setCompute(2);
+				}
+
+				for (TiXmlElement * ctrlPoint = patch->FirstChildElement("controlpoint"); ctrlPoint!=NULL; ctrlPoint = ctrlPoint->NextSiblingElement("controlpoint"))
+				{
+					Vector3* point = new Vector3();
+					if (ctrlPoint->QueryFloatAttribute("x",&x)==TIXML_SUCCESS)
+						point->setX(x);
+					if (ctrlPoint->QueryFloatAttribute("y",&y)==TIXML_SUCCESS)
+						point->setY(y);
+					if (ctrlPoint->QueryFloatAttribute("z",&z)==TIXML_SUCCESS)
+						point->setZ(z);
+					p->addPoint(point);
+				}
+
+				if (p->nPoints() != ((p->getOrder() + 1) * (p->getOrder() + 1)))
+				{
+					failed = true;
+				} else
+				{
+					p->update();
+
+					node->addPrimitive(p);
+				}
 			}
 		}
 		/* Process Descendants */

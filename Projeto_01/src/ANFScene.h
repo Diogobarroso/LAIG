@@ -35,6 +35,7 @@
 #include "Sphere.h"
 #include "Torus.h"
 #include "Plane.h"
+#include "Patch.h"
 
 #include "myUnitCube.h"
 
